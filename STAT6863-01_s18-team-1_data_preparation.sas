@@ -22,7 +22,7 @@
 ;
 %let inputDataset1DSN = player_stats;
 %let inputDataset1URL =
-team-1_project_repo/data/players_stats.xls
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xlsx
 ;
 %let inputDataset1Type = XLSX;
 
@@ -46,7 +46,7 @@ team-1_project_repo/data/players_stats.xls
 ;
 %let inputDataset2DSN = teamBoxScore;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/2016-17_teamBoxScore.xls
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls
 ;
 %let inputDataset2Type = XLSX;
 
