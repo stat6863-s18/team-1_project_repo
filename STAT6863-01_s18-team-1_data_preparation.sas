@@ -42,7 +42,7 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.x
 
 [Data Dictionary] https://basketball.realgm.com/info/glossary
 
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make a unique ID. 
+[Unique ID Schema] The column â€œgmDateâ€ and â€œTeamAbrvâ€ would combine to make a unique ID. 
 ;
 %let inputDataset2DSN = teamBoxScore;
 %let inputDataset2URL =
@@ -66,10 +66,10 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16
 
 [Data Dictionary] https://stats.nba.com/draft/combine-anthro/
 
-[Unique ID Schema] The columns "PLAYER” and “YEAR” can be combined to create an unique identifier.
+[Unique ID Schema] The columns "PLAYERâ€ and â€œYEARâ€ can be combined to create an unique identifier.
 ;
-%let inputDataset3DSN = ;
-%let inputDataset3URL = ;
+%let inputDataset3DSN = player_anthro;
+%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls;
 %let inputDataset3Type = XLSX;
 
 
