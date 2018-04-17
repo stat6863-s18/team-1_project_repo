@@ -25,7 +25,7 @@ NBA season.
 ;
 %let inputDataset1DSN = player_stats;
 %let inputDataset1URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xlsx
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xlsx?raw=true
 ;
 %let inputDataset1Type = XLSX;
 
@@ -51,7 +51,7 @@ make a unique ID.
 ;
 %let inputDataset2DSN = teamBoxScore;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls?raw=true
 ;
 %let inputDataset2Type = XLSX;
 
@@ -76,7 +76,8 @@ NBA combine.
 create an unique identifier.
 ;
 %let inputDataset3DSN = player_anthro;
-%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls;
+%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls?raw=true
+;
 %let inputDataset3Type = XLSX;
 
 
