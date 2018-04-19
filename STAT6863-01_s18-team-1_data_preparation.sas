@@ -49,7 +49,7 @@ every game that was played in the regular season.
 [Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to
 make a unique ID. 
 ;
-%let inputDataset2DSN = teamBoxScore;
+%let inputDataset2DSN = teamBoxScore_16-17;
 %let inputDataset2URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls?raw=true
 ;
@@ -75,8 +75,9 @@ NBA combine.
 [Unique ID Schema] The columns "PLAYER” and “YEAR” can be combined to
 create an unique identifier.
 ;
-%let inputDataset3DSN = player_anthro;
-%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls?raw=true
+%let inputDataset3DSN = nba_combine_anthro;
+%let inputDataset3URL =
+https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls?raw=true
 ;
 %let inputDataset3Type = XLSX;
 
