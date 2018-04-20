@@ -6,25 +6,31 @@
 * 
 [Dataset Name] player_stats
 
-[Dataset Description] Stats for each NBA player in 2014-2015 that, along with player stats, includes personal variables such as height, weight, college, and others.
+[Dataset Description] Stats for each NBA player in 2014-2015 that, along with 
+player stats, includes personal variables such as height, weight, college, and 
+others.
 
-[Experimental Unit Description] Each player that played during the 2014-2015 NBA season.
+[Experimental Unit Description] Each player that played during the 2014-2015 
+NBA season.
 
 [Number of Observations] 491                 
 
 [Number of Features] 34
 
-[Data Source] https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xls
+[Data Source] 
+https://github.com/stat6863/team-1_project_repo/blob/master/data/
+players_stats.xls
 
-[Data Dictionary] https://www.kaggle.com/drgilermo/nba-players-stats-20142015/data
+[Data Dictionary] https://www.kaggle.com/drgilermo/nba-players-stats-20142015/
+data
 
 [Unique ID Schema] Name is a primary key for the unique id.
 ;
 %let inputDataset1DSN = player_stats;
 %let inputDataset1URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xlsx
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.csv?raw=true
 ;
-%let inputDataset1Type = XLSX;
+%let inputDataset1Type = CSV;
 
 
 *
@@ -32,7 +38,8 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.x
 
 [Dataset Description] All NBA Team Statistics for Every Game, AY,2016-17
 
-[Experimental Unit Description] Has the combined statistics for every team and every game that was played in the regular season. 
+[Experimental Unit Description] Has the combined statistics for every team and 
+every game that was played in the regular season. 
 
 [Number of Observations] 2,461
                    
@@ -42,19 +49,21 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.x
 
 [Data Dictionary] https://basketball.realgm.com/info/glossary
 
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make a unique ID. 
+[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to 
+make a unique ID. 
 ;
 %let inputDataset2DSN = teamBoxScore;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.csv?raw=true
 ;
-%let inputDataset2Type = XLSX;
+%let inputDataset2Type = CSV;
 
 
 *
 [Dataset 3 Name] PLAYER_ANTHRO
 
-[Dataset Description] Anthropology of NBA draft players participating in the NBA combine.
+[Dataset Description] Anthropology of NBA draft players participating in the NBA 
+combine.
 
 [Experimental Unit Description] NBA players
 
@@ -66,11 +75,14 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16
 
 [Data Dictionary] https://stats.nba.com/draft/combine-anthro/
 
-[Unique ID Schema] The columns "PLAYER” and “YEAR” can be combined to create an unique identifier.
+[Unique ID Schema] The columns "PLAYER” and “YEAR” can be combined to create 
+an unique identifier.
 ;
 %let inputDataset3DSN = player_anthro;
-%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls;
-%let inputDataset3Type = XLSX;
+%let inputDataset3URL = 
+https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.csv?raw=true
+;
+%let inputDataset3Type = CSV;
 
 
 
