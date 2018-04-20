@@ -26,7 +26,7 @@ data
 
 [Unique ID Schema] Name is a primary key for the unique id.
 ;
-%let inputDataset1DSN = player_stats;
+%let inputDataset1DSN = player_stats_raw;
 %let inputDataset1URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.csv?raw=true
 ;
@@ -34,7 +34,7 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.c
 
 
 *
-[Dataset 3 Name] 2016-17_officialBoxScore
+[Dataset 2 Name] 2016-17_officialBoxScore
 
 [Dataset Description] All NBA Team Statistics for Every Game, AY,2016-17
 
@@ -49,10 +49,10 @@ every game that was played in the regular season.
 
 [Data Dictionary] https://basketball.realgm.com/info/glossary
 
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to 
-make a unique ID. 
+[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make a 
+unique ID. 
 ;
-%let inputDataset2DSN = teamBoxScore;
+%let inputDataset2DSN = teamBoxScore_16-17_raw;
 %let inputDataset2URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.csv?raw=true
 ;
