@@ -212,3 +212,20 @@ quit;
 *Every team only plays once a day and therefore using team and date variables as
 a unique identifier, we can get unduplicated counts for our ID. 
 ;
+
+
+*Inspecting Height in our player Anthro Data;
+
+title "Inspect Height in player_anthro";
+proc sql;
+    select
+         min(HEIGHT_SHOES) as min
+        ,max(HEIGHT_SHOES) as max
+        ,mean(HEIGHT_SHOES) as average
+        ,median(HEIGHT_SHOES) as median
+    from
+        work.player_anthro
+    ;
+quit;
+title;
+
