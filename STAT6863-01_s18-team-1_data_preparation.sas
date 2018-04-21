@@ -229,3 +229,19 @@ proc sql;
 quit;
 title;
 
+
+*Inspecting # points made in our player statistics data;
+
+title "Inspect 3PM in player_stats_raw";
+proc sql;
+    select
+         min(_3PM) as min
+        ,max(_3PM) as max
+        ,mean(_3PM) as average
+        ,median(_3PM) as median
+    from
+        work.player_stats_raw
+    ;
+quit;
+title;
+
