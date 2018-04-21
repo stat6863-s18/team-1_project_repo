@@ -23,11 +23,11 @@ NBA season.
 
 [Unique ID Schema] Name is a primary key for the unique id.
 ;
-%let inputDataset1DSN = player_stats;
+%let inputDataset1DSN = player_stats_raw;
 %let inputDataset1URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.xlsx?raw=true
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.csv?raw=true
 ;
-%let inputDataset1Type = XLSX;
+%let inputDataset1Type = CSV;
 
 
 *
@@ -49,11 +49,11 @@ every game that was played in the regular season.
 [Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to
 make a unique ID. 
 ;
-%let inputDataset2DSN = teamBoxScore;
+%let inputDataset2DSN = teamBoxScore_16-17_raw;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.xls?raw=true
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.csv?raw=true
 ;
-%let inputDataset2Type = XLSX;
+%let inputDataset2Type = CSV;
 
 
 *
@@ -76,9 +76,10 @@ NBA combine.
 create an unique identifier.
 ;
 %let inputDataset3DSN = player_anthro;
-%let inputDataset3URL = https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.xls?raw=true
+%let inputDataset3URL = 
+https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.csv?raw=true
 ;
-%let inputDataset3Type = XLSX;
+%let inputDataset3Type = CSV;
 
 
 * load raw datasets over the wire, if they doesn't already exist;
