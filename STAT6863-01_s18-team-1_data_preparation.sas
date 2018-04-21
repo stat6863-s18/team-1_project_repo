@@ -49,12 +49,12 @@ every game that was played in the regular season.
 
 [Data Dictionary] https://basketball.realgm.com/info/glossary
 
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make a 
-unique ID. 
+[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make 
+a unique ID. 
 ;
-%let inputDataset2DSN = teamBoxScore_16-17_raw;
+%let inputDataset2DSN = teamBoxScore_16_17_raw;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.csv?raw=true
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16_17.csv?raw=true
 ;
 %let inputDataset2Type = CSV;
 
@@ -129,3 +129,28 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_ant
     %end;
 %mend;
 %loadDatasets
+
+
+*Begin Data Integrity Checks and Data Integrity Mitigation;
+
+proc sql;
+select PLAYER,POS
+from work.player_anthro
+where PLAYER is missing;
+quit;
+
+proc sql;
+select Name,Pos
+from work.player_stats_raw
+where Name is missing;
+quit;
+
+proc sql;
+select offFNm1
+from work.Teamboxscore_16_17_raw
+where offFNm1 is missing;
+quit;
+
+*For our all three of our datasets we can see that we have no missing ID values,
+which in our case is Name, or a combination of name and position. No rows are 
+selected when we query missing values for names. 
