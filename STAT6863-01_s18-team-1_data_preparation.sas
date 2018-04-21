@@ -141,7 +141,7 @@ quit;
 
 proc sql;
 select Name,Pos
-from work.player_stats_raw
+from work.Player_stats_raw
 where Name is missing;
 quit;
 
@@ -154,3 +154,61 @@ quit;
 *For our all three of our datasets we can see that we have no missing ID values,
 which in our case is Name, or a combination of name and position. No rows are 
 selected when we query missing values for names. 
+;
+
+proc sql;
+select
+             PLAYER
+            ,POS
+			,YEAR
+            ,count(*) as row_count
+from work.player_anthro
+group by
+             PLAYER
+            ,POS
+			,YEAR
+        having
+            row_count > 1;
+
+quit;
+
+*Using Player, Position and Year, we can succesfully have unduplicated counts
+for our Anthro Data.
+;
+
+proc sql;
+select
+             Name
+            ,Pos
+            ,count(*) as row_count
+from work.Player_stats_raw
+group by
+             Name
+            ,Pos
+        having
+            row_count > 1;
+
+quit;
+
+
+*Again with the the above query we can see that no player names are duplicated,
+and therefore our ID value is also unduplicated.
+;
+
+proc sql;
+select
+             teamAbbr
+            ,gmDate
+            ,count(*) as row_count
+from work.Teamboxscore_16_17_raw
+group by
+             teamAbbr
+            ,gmDate
+        having
+            row_count > 1;
+
+quit;
+
+*Every team only plays once a day and therefore using team and date variables as
+a unique identifier, we can get unduplicated counts for our ID. 
+;
