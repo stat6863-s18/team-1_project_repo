@@ -49,12 +49,12 @@ every game that was played in the regular season.
 
 [Data Dictionary] https://basketball.realgm.com/info/glossary
 
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make a 
-unique ID. 
+[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make 
+a unique ID. 
 ;
-%let inputDataset2DSN = teamBoxScore_16-17_raw;
+%let inputDataset2DSN = teamBoxScore_16_17_raw;
 %let inputDataset2URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16-17.csv?raw=true
+https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16_17.csv?raw=true
 ;
 %let inputDataset2Type = CSV;
 
@@ -129,3 +129,119 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_ant
     %end;
 %mend;
 %loadDatasets
+
+
+*Begin Data Integrity Checks and Data Integrity Mitigation;
+
+proc sql;
+select PLAYER,POS
+from work.player_anthro
+where PLAYER is missing;
+quit;
+
+proc sql;
+select Name,Pos
+from work.Player_stats_raw
+where Name is missing;
+quit;
+
+proc sql;
+select offFNm1
+from work.Teamboxscore_16_17_raw
+where offFNm1 is missing;
+quit;
+
+*For our all three of our datasets we can see that we have no missing ID values,
+which in our case is Name, or a combination of name and position. No rows are 
+selected when we query missing values for names. 
+;
+
+proc sql;
+select
+             PLAYER
+            ,POS
+			,YEAR
+            ,count(*) as row_count
+from work.player_anthro
+group by
+             PLAYER
+            ,POS
+			,YEAR
+        having
+            row_count > 1;
+
+quit;
+
+*Using Player, Position and Year, we can succesfully have unduplicated counts
+for our Anthro Data.
+;
+
+proc sql;
+select
+             Name
+            ,Pos
+            ,count(*) as row_count
+from work.Player_stats_raw
+group by
+             Name
+            ,Pos
+        having
+            row_count > 1;
+
+quit;
+
+
+*Again with the the above query we can see that no player names are duplicated,
+and therefore our ID value is also unduplicated.
+;
+
+proc sql;
+select
+             teamAbbr
+            ,gmDate
+            ,count(*) as row_count
+from work.Teamboxscore_16_17_raw
+group by
+             teamAbbr
+            ,gmDate
+        having
+            row_count > 1;
+
+quit;
+
+*Every team only plays once a day and therefore using team and date variables as
+a unique identifier, we can get unduplicated counts for our ID. 
+;
+
+
+*Inspecting Height in our player Anthro Data;
+
+title "Inspect Height in player_anthro";
+proc sql;
+    select
+         min(HEIGHT_SHOES) as min
+        ,max(HEIGHT_SHOES) as max
+        ,mean(HEIGHT_SHOES) as average
+        ,median(HEIGHT_SHOES) as median
+    from
+        work.player_anthro
+    ;
+quit;
+title;
+
+
+*Inspecting # points made in our player statistics data;
+
+title "Inspect 3PM in player_stats_raw";
+proc sql;
+    select
+         min(_3PM) as min
+        ,max(_3PM) as max
+        ,mean(_3PM) as average
+        ,median(_3PM) as median
+    from
+        work.player_stats_raw
+    ;
+quit;
+title;
+
