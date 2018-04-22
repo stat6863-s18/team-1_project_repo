@@ -20,11 +20,15 @@ Question: How do the NBA players having the best shooting percentage per season
 compare with the single game best shooting performances from teams?
 
 Rationale:  This will help tell us if the best shooting players on average
-perform better than an a team's overall performance in a game.
+perform better than a team's overall performance in a game.
 
 Note:  We would be looking at data for the 2014-15 NBA season in the
 player_stats dataset using the "Name" and "FG%" columns along with the
 teamBoxScore_16-17 dataset using the columns "teamAbbr" and "teamFG%".
+
+Limitations:  We aren't comparing with an equal sample size for the two
+datasets we are testing on given that this would compare a player's season
+average with a team's performance in just one single game.
 ;
 
 
@@ -47,6 +51,10 @@ Note:  We will be using the player_stats dataset with the columns "Name",
 using the columns "teamAbbr" and "teamAST".  Due to the data in each dataset
 being two years apart, some players may not be on the same team in both
 datasets.
+
+Limitations:  Given how any stat from a NBA player doesn't exactly correlate
+with a team's stat, the conclusions for this experiment may not be entirely
+conclusive.
 ;
 
 
@@ -65,4 +73,9 @@ team.
 Note:  We will be using the columns "Name" and "REB" from the player_stats
 dataset along with the columns "HEIGHT_SHOES" and "WEIGHT" in the
 nba_combine_anthro dataset.
+
+Limitations:  Since the player list for the player_anthro data is only showing
+heights and weights for players from the NBA combine, the comparision may not
+have complete accuracy given the typical height and weight of an NBA player is
+much different than one about to enter the league.
 ;
