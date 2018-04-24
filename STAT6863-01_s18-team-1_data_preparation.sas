@@ -214,7 +214,24 @@ a unique identifier, we can get unduplicated counts for our ID.
 ;
 
 
+*Inspecting Team Assists in our team box score data;
+
+title "Assists in teamBoxscore_16_17";
+proc sql;
+	select
+		min(teamAST) as min
+		,max(teamAST) as max
+		,mean(teamAST) as average
+		,median(teamAST) as median
+	from
+		work.TeamBoxscore_16_17_raw
+	;
+quit;
+title;
+
+
 *Inspecting Height in our player Anthro Data;
+
 
 title "Inspect Height in player_anthro";
 proc sql;
