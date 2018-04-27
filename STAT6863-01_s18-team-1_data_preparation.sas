@@ -280,19 +280,64 @@ title;
 
 */
 
-/*
+proc sort data=work.player_stats_raw;
+	by Name;
+run;
+
+proc sort data=work.player_anthro;
+	by PLAYER;
+run;
+
+
+data table player_stats_and_anthro_v1;
+  retain
+          PLAYER
+          DREB
+          STL
+          BLK
+          HEIGHT_SHOES
+  ;
+  keep
+          PLAYER
+          DREB
+          STL
+          BLK
+          HEIGHT_SHOES
+  ;
+  merge
+          work.player_anthro
+          work.player_stats_raw(
+                  rename=(Name=PLAYER)
+          )
+  ;
+  by PLAYER;
+run;
+
+proc sort data=player_stats_and_anthro_v1;
+	by PLAYER;
+run;
 
 proc sql;
-  create table player_stats_and_anthro as
+  create table player_stats_and_anthro_v2 as
   select
-          coalesce(pa.PLAYER,ps.Name)
+          coalesce(pa.PLAYER,ps.Name) as PLAYER
+          ,ps.DREB
+          ,ps.STL
+          ,ps.BLK
+          ,pa.HEIGHT_SHOES
   from
           work.player_anthro as pa
-          ,work.player_stats_raw as ps
-  where
+				full join
+		      work.player_stats_raw as ps
+  on
           PLAYER = Name
   order by
           PLAYER;
 quit;
 
-*/
+proc compare
+		base=player_stats_and_anthro_v1
+		compare=player_stats_and_anthro_v2
+		novalues
+		;
+run;
