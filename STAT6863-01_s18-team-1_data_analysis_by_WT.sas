@@ -39,7 +39,7 @@ proc sql;
                 ,avg(DREB) as AvgDREB
                 ,avg(STL) as AvgSTL
                 ,avg(BLK) as AvgBLK
-                
+
         from
                 player_stats_and_anthro_v2
         where
