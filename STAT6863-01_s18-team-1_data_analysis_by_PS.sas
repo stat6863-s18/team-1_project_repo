@@ -85,7 +85,7 @@ proc sql outobs=10;
         ,AVG(stl) as avg_player_stl
         ,AVG(blk) as avg_player_blk
     from
-        sat_and_gradaf15_v2
+        player_stats_raw
     where
         pos is not null
     group by
@@ -121,10 +121,10 @@ proc sql outobs=10;
         ,AVG(a.pts) as avg_player_pts
 		,AVG(b.wingspan) as avg_player_ws
     from
-        sat_and_gradaf15_v2 a
-	join
-		player_anthro b
-		on a.name = b.player
+        player_stats_raw a
+    join
+        player_anthro b
+        on a.name = b.player
     where
         b.year = 2015
     group by
