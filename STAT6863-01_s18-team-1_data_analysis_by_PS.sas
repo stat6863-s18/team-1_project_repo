@@ -32,6 +32,29 @@ both datasets are in two different seasons which would need to be stated in
 order to answer my research question.
 ;
 
+proc sql outobs=10;
+    select DISTINCT
+         teamAbbr
+		,opptAbbr
+		,case when teamPTS = opptPTS then 'tied'
+		 when teamPTS > opptPTS then 'won'
+		 else 'lost' end as team_win_lose
+        ,AVG(teamPTS) as avg_team_pts
+        ,AVG(teamAST) as avg_team_ast /*  */
+        ,AVG(teamORB) as avg_team_orb /*  */
+		,AVG(teamDRB) as avg_team_drb
+        ,AVG(teamSTL) as avg_team_stl
+        ,AVG(teamBLK) as avg_team_blk
+    from
+        teamBoxScore_16_17_raw
+    where
+        seasTyp = "Regular"
+    group by
+        teamAbbr
+		,opptAbbr
+		,team_win_lose
+    ;
+quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -52,6 +75,23 @@ limitation to note is the different seasons each dataset refers to, 2014-2015
 and 2015-2016, respectively.
 ;
 
+proc sql outobs=10;
+    select
+		 pos
+        ,AVG(pts) as avg_player_pts
+        ,AVG(ast) as avg_player_ast /*  */
+        ,AVG(oreb) as avg_player_orb /*  */
+		,AVG(dreb) as avg_player_drb
+        ,AVG(stl) as avg_player_stl
+        ,AVG(blk) as avg_player_blk
+    from
+        sat_and_gradaf15_v2
+    where
+        pos is not null
+    group by
+        pos desc
+    ;
+quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -71,3 +111,23 @@ Limitations: Dataset 3 (player_anthro) only contains data on rookie NBA players
 who participated in the NBA combine. Using dataset 3, I will be able to see
 only rookie players who participated in the combine for 2014-2015.
 ;
+
+proc sql outobs=10;
+    select
+         b.player
+        ,case when AVG(a.pts) is null then 'null'
+		 when AVG(a.pts) >= 10 then 'dd_pts'
+		 else 'sd_pts' end as pts_volume
+        ,AVG(a.pts) as avg_player_pts
+		,AVG(b.wingspan) as avg_player_ws
+    from
+        sat_and_gradaf15_v2 a
+	join
+		player_anthro b
+		on a.name = b.player
+    where
+        b.year = 2015
+    group by
+        b.player
+    ;
+quit;
