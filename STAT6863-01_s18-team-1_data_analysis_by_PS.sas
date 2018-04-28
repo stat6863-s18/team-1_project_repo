@@ -38,13 +38,13 @@ proc sql outobs=10;
 		,opptAbbr
 		,case when teamPTS = opptPTS then 'tied'
 		 when teamPTS > opptPTS then 'won'
-		 else 'lost' end as team_win_lose
-        ,AVG(teamPTS) as avg_team_pts
-        ,AVG(teamAST) as avg_team_ast /*  */
-        ,AVG(teamORB) as avg_team_orb /*  */
-		,AVG(teamDRB) as avg_team_drb
-        ,AVG(teamSTL) as avg_team_stl
-        ,AVG(teamBLK) as avg_team_blk
+		 else 'lost' end as team_win_lose /* Win/Lose */
+        ,AVG(teamPTS) as avg_team_pts /* Average team points */
+        ,AVG(teamAST) as avg_team_ast /* Average team assists */
+        ,AVG(teamORB) as avg_team_orb /* Average team offensive rebounds */
+		,AVG(teamDRB) as avg_team_drb /* Average team defensive rebounds */
+        ,AVG(teamSTL) as avg_team_stl /* Average team steals */
+        ,AVG(teamBLK) as avg_team_blk /* Average team blocks */
     from
         teamBoxScore_16_17_raw
     where
@@ -78,12 +78,12 @@ and 2015-2016, respectively.
 proc sql outobs=10;
     select
 		 pos
-        ,AVG(pts) as avg_player_pts
-        ,AVG(ast) as avg_player_ast /*  */
-        ,AVG(oreb) as avg_player_orb /*  */
-		,AVG(dreb) as avg_player_drb
-        ,AVG(stl) as avg_player_stl
-        ,AVG(blk) as avg_player_blk
+        ,AVG(pts) as avg_player_pts /* Average player points */
+        ,AVG(ast) as avg_player_ast /* Average player assists */
+        ,AVG(oreb) as avg_player_orb /* Average player offensive rebounds */
+		,AVG(dreb) as avg_player_drb /* Average player defensive rebounds */
+        ,AVG(stl) as avg_player_stl /* Average player steals */
+        ,AVG(blk) as avg_player_blk /* Average player blocks */
     from
         player_stats_raw
     where
@@ -117,9 +117,9 @@ proc sql outobs=10;
          b.player
         ,case when AVG(a.pts) is null then 'null'
 		 when AVG(a.pts) >= 10 then 'dd_pts'
-		 else 'sd_pts' end as pts_volume
-        ,AVG(a.pts) as avg_player_pts
-		,AVG(b.wingspan) as avg_player_ws
+		 else 'sd_pts' end as pts_volume /* Double Digit indicator */
+        ,AVG(a.pts) as avg_player_pts /* Average player points */
+		,AVG(b.wingspan) as avg_player_ws /* Average wingspan */
     from
         player_stats_raw a
     join
