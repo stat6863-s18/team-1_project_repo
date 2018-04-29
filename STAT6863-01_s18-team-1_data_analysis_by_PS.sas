@@ -76,10 +76,10 @@ proc sql outobs=10;
     select
          player
         ,case when AVG(pts) is null then 'null'
-		     when AVG(pts) >= 10 then 'dd_pts'
-		     else 'sd_pts' end as pts_volume /* Double Digit indicator */
-        ,AVG(pts) as avg_player_pts      /* Average player points */
-		    ,AVG(wingspan) as avg_player_ws  /* Average wingspan */
+         when AVG(pts) >= 10 then 'dd_pts'
+         else 'sd_pts' end as pts_volume /* Double Digit indicator */
+        ,AVG(pts) as avg_player_pts      /* Average player points */ 
+	,AVG(wingspan) as avg_player_ws  /* Average wingspan */
     from
         player_stats_and_anthro_v2
     ;
