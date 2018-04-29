@@ -131,7 +131,7 @@ options fullstimer;
 %mend;
 %loadDatasets
 
-/*
+
 *Begin Data Integrity Checks and Data Integrity Mitigation;
 
 proc sql;
@@ -231,54 +231,53 @@ a unique identifier, we can get unduplicated counts for our ID.
 
 
 *Inspecting Team Assists in our team box score data;
-
-title "Assists in teamBoxscore_16_17";
-proc sql;
-	select
-		min(teamAST) as min
-		,max(teamAST) as max
-		,mean(teamAST) as average
-		,median(teamAST) as median
-	from
-		work.TeamBoxscore_16_17_raw
-	;
-quit;
-title;
+	/*
+	title "Assists in teamBoxscore_16_17";
+	proc sql;
+		select
+			min(teamAST) as min
+			,max(teamAST) as max
+			,mean(teamAST) as average
+			,median(teamAST) as median
+		from
+			work.TeamBoxscore_16_17_raw
+		;
+	quit;
+	title;
 
 
 *Inspecting Height in our player Anthro Data;
+	
 
-
-title "Inspect Height in player_anthro";
-proc sql;
-	select
-		min(HEIGHT_SHOES) as min
-		,max(HEIGHT_SHOES) as max
-		,mean(HEIGHT_SHOES) as average
-		,median(HEIGHT_SHOES) as median
-	from
-		work.player_anthro
-	;
-quit;
-title;
+	title "Inspect Height in player_anthro";
+	proc sql;
+		select
+			min(HEIGHT_SHOES) as min
+			,max(HEIGHT_SHOES) as max
+			,mean(HEIGHT_SHOES) as average
+			,median(HEIGHT_SHOES) as median
+		from
+			work.player_anthro
+		;
+	quit;
+	title;
 
 
 *Inspecting # points made in our player statistics data;
 
-title "Inspect 3PM in player_stats_raw";
-proc sql;
-	select
-		min(_3PM) as min
-		,max(_3PM) as max
-		,mean(_3PM) as average
-		,median(_3PM) as median
-	from
-		work.player_stats_raw
-	;
-quit;
-title;
-
-*/
+	title "Inspect 3PM in player_stats_raw";
+	proc sql;
+		select
+			min(_3PM) as min
+			,max(_3PM) as max
+			,mean(_3PM) as average
+			,median(_3PM) as median
+		from
+			work.player_stats_raw
+		;
+	quit;
+	title;
+	*/
 
 proc sort data=work.player_stats_raw;
 	by Name;
@@ -291,28 +290,28 @@ run;
 
 data table player_stats_and_anthro_v1;
   retain
-          PLAYER
+    PLAYER
 	  PTS
-          DREB
-          STL
-          BLK
-          HEIGHT_SHOES
+    DREB
+    STL
+    BLK
+    HEIGHT_SHOES
 	  WINGSPAN
   ;
   keep
-          PLAYER
+    PLAYER
 	  PTS
-          DREB
-          STL
-          BLK
-          HEIGHT_SHOES
+    DREB
+    STL
+    BLK
+    HEIGHT_SHOES
 	  WINGSPAN
   ;
   merge
-          work.player_anthro
-          work.player_stats_raw(
-                  rename=(Name=PLAYER)
-          )
+    work.player_anthro
+    work.player_stats_raw(
+    rename=(Name=PLAYER)
+    )
   ;
   by PLAYER;
 run;
@@ -324,26 +323,26 @@ run;
 proc sql;
   create table player_stats_and_anthro_v2 as
   select
-           coalesce(pa.PLAYER,ps.Name) as PLAYER
+     coalesce(pa.PLAYER,ps.Name) as PLAYER
 	  ,ps.PTS
-          ,ps.DREB
-          ,ps.STL
-          ,ps.BLK
-          ,pa.HEIGHT_SHOES
+    ,ps.DREB
+    ,ps.STL
+    ,ps.BLK
+    ,pa.HEIGHT_SHOES
 	  ,pa.WINGSPAN
   from
-          work.player_anthro as pa
-				full join
-		      work.player_stats_raw as ps
+    work.player_anthro as pa
+	full join
+		work.player_stats_raw as ps
   on
-          PLAYER = Name
+    PLAYER = Name
   order by
-          PLAYER;
+    PLAYER;
 quit;
 
 proc compare
 		base=player_stats_and_anthro_v1
 		compare=player_stats_and_anthro_v2
 		novalues
-		;
+	;
 run;
