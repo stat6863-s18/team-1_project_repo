@@ -97,3 +97,6 @@ proc sql outobs=20;
 			REB
 		;
 quit;
+
+proc print data=REBOUNDS_SIZE;
+run;
