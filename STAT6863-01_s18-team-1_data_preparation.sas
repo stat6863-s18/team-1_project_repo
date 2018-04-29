@@ -289,27 +289,31 @@ run;
 
 
 data table player_stats_and_anthro_v1;
-	retain
-		PLAYER
-		DREB
-		STL
-		BLK
-		HEIGHT_SHOES
-	;
-	keep
-		PLAYER
-		DREB
-		STL
-		BLK
-		HEIGHT_SHOES
-	;
-	merge
-		work.player_anthro
-		work.player_stats_raw(
-			rename=(Name=PLAYER)
-		)
-	;
-	by PLAYER;
+  retain
+    PLAYER
+	  PTS
+    DREB
+    STL
+    BLK
+    HEIGHT_SHOES
+	  WINGSPAN
+  ;
+  keep
+    PLAYER
+	  PTS
+    DREB
+    STL
+    BLK
+    HEIGHT_SHOES
+	  WINGSPAN
+  ;
+  merge
+    work.player_anthro
+    work.player_stats_raw(
+    rename=(Name=PLAYER)
+    )
+  ;
+  by PLAYER;
 run;
 
 proc sort data=player_stats_and_anthro_v1;
@@ -317,21 +321,23 @@ proc sort data=player_stats_and_anthro_v1;
 run;
 
 proc sql;
-	create table player_stats_and_anthro_v2 as
-		select
- 			coalesce(pa.PLAYER,ps.Name) as PLAYER
-			,ps.DREB
-			,ps.STL
-			,ps.BLK
-			,pa.HEIGHT_SHOES
-  		from
-			work.player_anthro as pa
-			full join
-			work.player_stats_raw as ps
-		on
-			PLAYER = Name
-		order by
-			PLAYER;
+  create table player_stats_and_anthro_v2 as
+  select
+     coalesce(pa.PLAYER,ps.Name) as PLAYER
+	  ,ps.PTS
+    ,ps.DREB
+    ,ps.STL
+    ,ps.BLK
+    ,pa.HEIGHT_SHOES
+	  ,pa.WINGSPAN
+  from
+    work.player_anthro as pa
+	full join
+		work.player_stats_raw as ps
+  on
+    PLAYER = Name
+  order by
+    PLAYER;
 quit;
 
 proc compare
