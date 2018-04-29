@@ -79,3 +79,21 @@ heights and weights for players from the NBA combine, the comparision may not
 have complete accuracy given the typical height and weight of an NBA player is
 much different than one about to enter the league.
 ;
+
+proc sql outobs=20;
+	create table REBOUNDS_SIZE as
+		select
+			Name
+			,REB
+			,HEIGHT_SHOES
+			,WEIGHT
+		from
+			player_stats_and_anthro_v2
+		where
+			HEIGHT_SHOES > 100
+			and
+			WEIGHT > 200
+		order by
+			REB
+		;
+quit;
