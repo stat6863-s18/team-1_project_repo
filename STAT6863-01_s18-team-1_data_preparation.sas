@@ -292,17 +292,21 @@ run;
 data table player_stats_and_anthro_v1;
   retain
           PLAYER
+	  PTS
           DREB
           STL
           BLK
           HEIGHT_SHOES
+	  WINGSPAN
   ;
   keep
           PLAYER
+	  PTS
           DREB
           STL
           BLK
           HEIGHT_SHOES
+	  WINGSPAN
   ;
   merge
           work.player_anthro
@@ -320,11 +324,13 @@ run;
 proc sql;
   create table player_stats_and_anthro_v2 as
   select
-          coalesce(pa.PLAYER,ps.Name) as PLAYER
+           coalesce(pa.PLAYER,ps.Name) as PLAYER
+	  ,ps.PTS
           ,ps.DREB
           ,ps.STL
           ,ps.BLK
           ,pa.HEIGHT_SHOES
+	  ,pa.WINGSPAN
   from
           work.player_anthro as pa
 				full join
