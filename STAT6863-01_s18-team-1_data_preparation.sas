@@ -287,39 +287,45 @@ proc sort data=work.player_anthro;
 	by PLAYER;
 run;
 
-
+*combine player_stats and player_anthro horizontally using data-step
+match-merge;
+*Note:  After running the data step and averaging the fullstimer step, they
+tend to take about .44 seconds of "real time" to execute;
 data table player_stats_and_anthro_v1;
-  retain
-    PLAYER
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  keep
-    PLAYER 
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  merge
-    work.player_anthro
-    work.player_stats_raw(
-    rename=(Name=PLAYER)
-    )
-  ;
-  by PLAYER;
+	retain
+		PLAYER
+		PTS
+		DREB
+		STL
+		BLK
+		HEIGHT_SHOES 
+		WINGSPAN
+	;
+	keep
+		PLAYER 
+		PTS
+		DREB
+		STL
+		BLK
+		HEIGHT_SHOES 
+		WINGSPAN
+	;
+	merge
+		work.player_anthro
+		work.player_stats_raw(
+		rename=(Name=PLAYER)
+		)
+	;
+	by PLAYER;
 run;
 
 proc sort data=player_stats_and_anthro_v1;
 	by PLAYER;
 run;
 
+*combine player_stats and player_anthro horizontally using proc sql;
+*Note:  After running this proc sql step and averaging the fullstimer output in
+the SAS log, they take about .04 seconds of "real time" to execute;
 proc sql;
   create table player_stats_and_anthro_v2 as
   select
@@ -340,6 +346,8 @@ proc sql;
     PLAYER;
 quit;
 
+*verify that player_stats_and_anthro_v1 and player_stats_and_anthro_v2 are
+identical;
 proc compare
 		base=player_stats_and_anthro_v1
 		compare=player_stats_and_anthro_v2
