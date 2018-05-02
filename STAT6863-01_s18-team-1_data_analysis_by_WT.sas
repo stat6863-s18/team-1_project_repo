@@ -39,7 +39,6 @@ proc sql;
                 ,avg(DREB) as AvgDREB
                 ,avg(STL) as AvgSTL
                 ,avg(BLK) as AvgBLK
-
         from
                 player_stats_and_anthro_v2
         where
@@ -71,8 +70,6 @@ in a column and Last Name is in a seperate column. We must figure out whether
 Middle names might affect our ID variable. It seems like player_stats only uses
 first and last name, but team_box_score uses multiple.
 ;
-
-
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
