@@ -4,7 +4,7 @@
 *******************************************************************************;
 
 *
-[Dataset Name] player_stats
+[Dataset Name] players_stats_data
 
 [Dataset Description] Stats for each NBA player in 2014-2015 that, along with
 player stats, includes personal variables such as height, weight, college, and
@@ -26,9 +26,9 @@ data
 
 [Unique ID Schema] Name is a primary key for the unique id.
 ;
-%let inputDataset1DSN = player_stats_raw;
+%let inputDataset1DSN = players_stats_data_raw;
 %let inputDataset1URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats.csv?raw=true
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_data.csv?raw=true
 ;
 %let inputDataset1Type = CSV;
 
@@ -146,11 +146,11 @@ proc sql;
 quit;
 
 proc sql;
-    create table player_stats_nmiss as
+    create table players_stats_data_nmiss as
 	    select
 		    Name,Pos
 	    from
-		    work.player_stats_raw
+		    work.players_stats_data_raw
 	    where
 		    Name is missing
 	;
@@ -195,13 +195,13 @@ for our Anthro Data.
 ;
 
 proc sql;
-    create table player_stats_dups as
+    create table players_stats_data_dups as
 	    select
 	     	 Name
 		    ,Pos
 		    ,count(*) as row_count
 	    from
-		    work.player_stats_raw
+		    work.players_stats_data_raw
 	    group by
 		     Name
 		    ,Pos
@@ -279,13 +279,13 @@ as a unique identifier, we can get unduplicated counts for our ID.
 			,mean(_3PM) as average
 			,median(_3PM) as median
 		from
-			work.player_stats_raw
+			work.players_stats_data_raw
 		;
 	quit;
 	title;
 	*/
 
-proc sort data=work.player_stats_raw;
+proc sort data=work.players_stats_data_raw;
     by Name;
 run;
 
@@ -293,11 +293,13 @@ proc sort data=work.player_anthro;
     by PLAYER;
 run;
 
-* combine player_stats and player_anthro horizontally using data-step
+* combine players_stats_data and player_anthro horizontally using data-step
 match-merge;
-* Note:  After running the data step and averaging the fullstimer step, they
-tend to take about .44 seconds of "real time" to execute;
-data table player_stats_and_anthro_v1;
+* Note:  After running the data step and proc sort below several times and
+averaging the fullstimer step, they tend to take about .01 seconds of "real
+time" to execute and a maximum of about 1950 KB of memory (1250 KB for the data
+step vs. 700 KB for the proc sort step) on the computer they were tested on;
+data table players_stats_data_and_anthro_v1;
     retain
         PLAYER
         PTS
@@ -318,7 +320,7 @@ data table player_stats_and_anthro_v1;
     ;
     merge
         work.player_anthro
-        work.player_stats_raw(
+        work.players_stats_data_raw(
             rename=(
                 Name=PLAYER
             )
@@ -327,15 +329,16 @@ data table player_stats_and_anthro_v1;
   by PLAYER;
 run;
 
-proc sort data=player_stats_and_anthro_v1;
+proc sort data=players_stats_data_and_anthro_v1;
     by PLAYER;
 run;
 
-* combine player_stats and player_anthro horizontally using proc sql;
+* combine players_stats_data and player_anthro horizontally using proc sql;
 * Note:  After running this proc sql step and averaging the fullstimer output in
-the SAS log, they take about .04 seconds of "real time" to execute;
+the SAS log, they take about .02 seconds of "real time" to execute and a
+maximum of about 5600 KB of memory on the computer they were tested on;
 proc sql;
-    create table player_stats_and_anthro_v2 as
+    create table players_stats_data_and_anthro_v2 as
         select
              coalesce(pa.PLAYER,ps.Name) as PLAYER 
             ,ps.PTS
@@ -347,18 +350,18 @@ proc sql;
         from
             work.player_anthro as pa
 	      full join
-		        work.player_stats_raw as ps
+		        work.players_stats_data_raw as ps
             on
                 PLAYER = Name
         order by
             PLAYER;
 quit;
 
-* verify that player_stats_and_anthro_v1 and player_stats_and_anthro_v2 are
+* verify that players_stats_data_and_anthro_v1 and players_stats_data_and_anthro_v2 are
 identical;
 proc compare
-        base=player_stats_and_anthro_v1
-        compare=player_stats_and_anthro_v2
+        base=players_stats_data_and_anthro_v1
+        compare=players_stats_data_and_anthro_v2
         novalues
     ;
 run;
