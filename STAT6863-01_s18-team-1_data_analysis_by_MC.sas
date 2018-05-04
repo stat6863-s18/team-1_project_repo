@@ -88,7 +88,7 @@ proc sql outobs=20;
 			,HEIGHT_SHOES
 			,WEIGHT
 		from
-			player_stats_and_anthro_v2
+			players_stats_data_and_anthro_v2
 		where
 			HEIGHT_SHOES > 100
 			and
