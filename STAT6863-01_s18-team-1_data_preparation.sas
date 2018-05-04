@@ -84,7 +84,7 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_ant
 ;
 %let inputDataset3Type = CSV;
 
-*set global system options;
+* set global system options;
 options fullstimer;
 
 * load raw datasets over the wire, if they doesn't already exist;
@@ -132,53 +132,57 @@ options fullstimer;
 %loadDatasets
 
 
-*Begin Data Integrity Checks and Data Integrity Mitigation;
+* Begin Data Integrity Checks and Data Integrity Mitigation;
 
 proc sql;
-	select
-		PLAYER,POS
-	from
-		work.player_anthro
-	where
-		PLAYER is missing
+    create table player_anthro_nmiss as
+	    select
+		    PLAYER,POS
+	    from
+		    work.player_anthro
+	    where
+		    PLAYER is missing
 	;
 quit;
 
 proc sql;
-	select
-		Name,Pos
-	from
-		work.Player_stats_raw
-	where
-		Name is missing
+    create table player_stats_nmiss as
+	    select
+		    Name,Pos
+	    from
+		    work.player_stats_raw
+	    where
+		    Name is missing
 	;
 quit;
 
 proc sql;
-	select
-		offFNm1
-	from
-		work.Teamboxscore_16_17_raw
-	where
-		offFNm1 is missing
+    create table teamboxscore_nmiss as
+	    select
+		    offFNm1
+	    from
+		    work.teamboxscore_16_17_raw
+	    where
+		    offFNm1 is missing
 	;
 quit;
 
-*For our all three of our datasets we can see that we have no missing ID values,
+* For our all three of our datasets we can see that we have no missing ID values,
 which in our case is Name, or a combination of name and position. No rows are
 selected when we query missing values for names.
 ;
 
 proc sql;
+    create table player_anthro_dups as
 	select
-		PLAYER
+		 PLAYER
  		,POS
 		,YEAR
 		,count(*) as row_count
 	from
 		work.player_anthro
 	group by
-		PLAYER
+		 PLAYER
  		,POS
 		,YEAR
 	having
@@ -186,51 +190,53 @@ proc sql;
 	;
 quit;
 
-*Using Player, Position and Year, we can succesfully have unduplicated counts
+* Using Player, Position and Year, we can succesfully have unduplicated counts
 for our Anthro Data.
 ;
 
 proc sql;
-	select
-		Name
-		,Pos
-		,count(*) as row_count
-	from
-		work.Player_stats_raw
-	group by
-		Name
-		,Pos
-	having
-		row_count > 1
+    create table player_stats_dups as
+	    select
+	     	 Name
+		    ,Pos
+		    ,count(*) as row_count
+	    from
+		    work.player_stats_raw
+	    group by
+		     Name
+		    ,Pos
+	    having
+		    row_count > 1
 	;
 quit;
 
 
-*Again with the the above query we can see that no player names are duplicated,
+* Again with the the above query we can see that no player names are duplicated,
 and therefore our ID value is also unduplicated.
 ;
 
 proc sql;
-	select
-		teamAbbr
-		,gmDate
-		,count(*) as row_count
-	from
-		work.Teamboxscore_16_17_raw
-	group by
-		teamAbbr
-		,gmDate
-	having
-		row_count > 1
+    create table teamboxscore_dups as
+	    select
+		     teamAbbr
+		    ,gmDate
+		    ,count(*) as row_count
+	    from
+		    work.teamboxscore_16_17_raw
+	    group by
+		     teamAbbr
+		    ,gmDate
+	    having
+		    row_count > 1
 	;
 quit;
 
-*Every team only plays once a day and therefore using team and date variables as
-a unique identifier, we can get unduplicated counts for our ID.
+* Every team only plays once a day and therefore using team and date variables 
+as a unique identifier, we can get unduplicated counts for our ID.
 ;
 
 
-*Inspecting Team Assists in our team box score data;
+* Inspecting Team Assists in our team box score data;
 	/*
 	title "Assists in teamBoxscore_16_17";
 	proc sql;
@@ -246,7 +252,7 @@ a unique identifier, we can get unduplicated counts for our ID.
 	title;
 
 
-*Inspecting Height in our player Anthro Data;
+* Inspecting Height in our player Anthro Data;
 	
 
 	title "Inspect Height in player_anthro";
@@ -263,7 +269,7 @@ a unique identifier, we can get unduplicated counts for our ID.
 	title;
 
 
-*Inspecting # points made in our player statistics data;
+* Inspecting # points made in our player statistics data;
 
 	title "Inspect 3PM in player_stats_raw";
 	proc sql;
@@ -280,69 +286,79 @@ a unique identifier, we can get unduplicated counts for our ID.
 	*/
 
 proc sort data=work.player_stats_raw;
-	by Name;
+    by Name;
 run;
 
 proc sort data=work.player_anthro;
-	by PLAYER;
+    by PLAYER;
 run;
 
-
+* combine player_stats and player_anthro horizontally using data-step
+match-merge;
+* Note:  After running the data step and averaging the fullstimer step, they
+tend to take about .44 seconds of "real time" to execute;
 data table player_stats_and_anthro_v1;
-  retain
-    PLAYER
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  keep
-    PLAYER 
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  merge
-    work.player_anthro
-    work.player_stats_raw(
-    rename=(Name=PLAYER)
-    )
+    retain
+        PLAYER
+        PTS
+        DREB
+        STL
+        BLK
+        HEIGHT_SHOES 
+        WINGSPAN
+    ;
+    keep
+        PLAYER 
+        PTS
+        DREB
+        STL
+        BLK
+        HEIGHT_SHOES 
+        WINGSPAN
+    ;
+    merge
+        work.player_anthro
+        work.player_stats_raw(
+            rename=(
+                Name=PLAYER
+            )
+        )
   ;
   by PLAYER;
 run;
 
 proc sort data=player_stats_and_anthro_v1;
-	by PLAYER;
+    by PLAYER;
 run;
 
+* combine player_stats and player_anthro horizontally using proc sql;
+* Note:  After running this proc sql step and averaging the fullstimer output in
+the SAS log, they take about .04 seconds of "real time" to execute;
 proc sql;
-  create table player_stats_and_anthro_v2 as
-  select
-     coalesce(pa.PLAYER,ps.Name) as PLAYER 
-    ,ps.PTS
-    ,ps.DREB
-    ,ps.STL
-    ,ps.BLK
-    ,pa.HEIGHT_SHOES
-    ,pa.WINGSPAN
-  from
-    work.player_anthro as pa
-	full join
-		work.player_stats_raw as ps
-  on
-    PLAYER = Name
-  order by
-    PLAYER;
+    create table player_stats_and_anthro_v2 as
+        select
+             coalesce(pa.PLAYER,ps.Name) as PLAYER 
+            ,ps.PTS
+            ,ps.DREB
+            ,ps.STL
+            ,ps.BLK
+            ,pa.HEIGHT_SHOES
+            ,pa.WINGSPAN
+        from
+            work.player_anthro as pa
+	      full join
+		        work.player_stats_raw as ps
+            on
+                PLAYER = Name
+        order by
+            PLAYER;
 quit;
 
+* verify that player_stats_and_anthro_v1 and player_stats_and_anthro_v2 are
+identical;
 proc compare
-		base=player_stats_and_anthro_v1
-		compare=player_stats_and_anthro_v2
-		novalues
-	;
+        base=player_stats_and_anthro_v1
+        compare=player_stats_and_anthro_v2
+        novalues
+    ;
 run;
