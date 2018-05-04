@@ -135,32 +135,35 @@ options fullstimer;
 *Begin Data Integrity Checks and Data Integrity Mitigation;
 
 proc sql;
-	select
-		PLAYER,POS
-	from
-		work.player_anthro
-	where
-		PLAYER is missing
+    create table player_anthro_nmiss as
+	    select
+		    PLAYER,POS
+	    from
+		    work.player_anthro
+	    where
+		    PLAYER is missing
 	;
 quit;
 
 proc sql;
-	select
-		Name,Pos
-	from
-		work.Player_stats_raw
-	where
-		Name is missing
+    create table player_stats_nmiss as
+	    select
+		    Name,Pos
+	    from
+		    work.player_stats_raw
+	    where
+		    Name is missing
 	;
 quit;
 
 proc sql;
-	select
-		offFNm1
-	from
-		work.Teamboxscore_16_17_raw
-	where
-		offFNm1 is missing
+    create table teamboxscore_nmiss as
+	    select
+		    offFNm1
+	    from
+		    work.teamboxscore_16_17_raw
+	    where
+		    offFNm1 is missing
 	;
 quit;
 
@@ -170,15 +173,16 @@ selected when we query missing values for names.
 ;
 
 proc sql;
+    create table player_anthro_dups as
 	select
-		PLAYER
+		 PLAYER
  		,POS
 		,YEAR
 		,count(*) as row_count
 	from
 		work.player_anthro
 	group by
-		PLAYER
+		 PLAYER
  		,POS
 		,YEAR
 	having
@@ -191,17 +195,18 @@ for our Anthro Data.
 ;
 
 proc sql;
-	select
-		Name
-		,Pos
-		,count(*) as row_count
-	from
-		work.Player_stats_raw
-	group by
-		Name
-		,Pos
-	having
-		row_count > 1
+    create table player_stats_dups as
+	    select
+	     	 Name
+		    ,Pos
+		    ,count(*) as row_count
+	    from
+		    work.player_stats_raw
+	    group by
+		     Name
+		    ,Pos
+	    having
+		    row_count > 1
 	;
 quit;
 
@@ -211,17 +216,18 @@ and therefore our ID value is also unduplicated.
 ;
 
 proc sql;
-	select
-		teamAbbr
-		,gmDate
-		,count(*) as row_count
-	from
-		work.Teamboxscore_16_17_raw
-	group by
-		teamAbbr
-		,gmDate
-	having
-		row_count > 1
+    create table teamboxscore_dups as
+	    select
+		     teamAbbr
+		    ,gmDate
+		    ,count(*) as row_count
+	    from
+		    work.teamboxscore_16_17_raw
+	    group by
+		     teamAbbr
+		    ,gmDate
+	    having
+		    row_count > 1
 	;
 quit;
 
@@ -289,60 +295,62 @@ run;
 
 
 data table player_stats_and_anthro_v1;
-  retain
-    PLAYER
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  keep
-    PLAYER 
-    PTS
-    DREB
-    STL
-    BLK
-    HEIGHT_SHOES 
-    WINGSPAN
-  ;
-  merge
-    work.player_anthro
-    work.player_stats_raw(
-    rename=(Name=PLAYER)
-    )
+    retain
+        PLAYER
+        PTS
+        DREB
+        STL
+        BLK
+        HEIGHT_SHOES 
+        WINGSPAN
+    ;
+    keep
+        PLAYER 
+        PTS
+        DREB
+        STL
+        BLK
+        HEIGHT_SHOES 
+        WINGSPAN
+    ;
+    merge
+        work.player_anthro
+        work.player_stats_raw(
+            rename=(
+                Name=PLAYER
+            )
+        )
   ;
   by PLAYER;
 run;
 
 proc sort data=player_stats_and_anthro_v1;
-	by PLAYER;
+    by PLAYER;
 run;
 
 proc sql;
-  create table player_stats_and_anthro_v2 as
-  select
-     coalesce(pa.PLAYER,ps.Name) as PLAYER 
-    ,ps.PTS
-    ,ps.DREB
-    ,ps.STL
-    ,ps.BLK
-    ,pa.HEIGHT_SHOES
-    ,pa.WINGSPAN
-  from
-    work.player_anthro as pa
-	full join
-		work.player_stats_raw as ps
-  on
-    PLAYER = Name
-  order by
-    PLAYER;
+    create table player_stats_and_anthro_v2 as
+        select
+             coalesce(pa.PLAYER,ps.Name) as PLAYER 
+            ,ps.PTS
+            ,ps.DREB
+            ,ps.STL
+            ,ps.BLK
+            ,pa.HEIGHT_SHOES
+            ,pa.WINGSPAN
+        from
+            work.player_anthro as pa
+	    full join
+		    work.player_stats_raw as ps
+            on
+                PLAYER = Name
+        order by
+            PLAYER;
 quit;
 
 proc compare
-		base=player_stats_and_anthro_v1
-		compare=player_stats_and_anthro_v2
-		novalues
-	;
+        base=player_stats_and_anthro_v1
+        compare=player_stats_and_anthro_v2
+        novalues
+    ;
 run;
