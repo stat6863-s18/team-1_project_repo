@@ -33,7 +33,6 @@ is not being incorrectly attributed certain statistics.
 ;
 
 proc sql;
-		create table Height_Success as
         select
 				HEIGHT_SHOES
                 ,avg(DREB) as AvgDREB
