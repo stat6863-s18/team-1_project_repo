@@ -75,18 +75,24 @@ first and last name, but team_box_score uses multiple.
 *******************************************************************************;
 
 *
-Question: Do taller players have more accurate shots due to them being closer to
-the rim on average?
+Question: Did players attempt more 3 pointers in the 15-16 season than they did
+in the 14-15 season?
 
-Rationale: Centers usually stay close to the rim to get rebounds and better shots
-due to their height but does that actually translate into a higher Field Goal
-Percentage?.
+Rationale: There has been a trend of coaches implementing "small" line ups which
+include more 3 point shooters. The logical conclusion would then be that the
+number of 3 point attempts has also gone up year to year.
 
-Note: This would compare the columns "Height w/ Shoes" from Player Anthro Data
-and "FG%" from player_stats.
+Note: This would compare the columns "3PA" from Player Stats 14-15 and the
+columns "3PA" from Player Stats 14-15.
 
-Limitations: Our player_anthro_data dataset contains a measurement of multiple
-human characteristics. Our player_stats column also has a height column. We can
-make the assumption that our player_anthro data is correct most of the time if
-the datasets do not have matching values for the same player.
+Limitations: We only have 2 data points. In order to make a broader conclusion,
+more years of data would have to be added in to make a conclusion with more
+certainty.
 ;
+proc sql;
+  select avg(_3PA) as ThreesAttempted1415
+  from players_stats_data_raw
+  outer union corr
+  select avg(_3PA)*82 as ThreesAttempted1516
+  from players_stats_data_raw_1516;
+quit;
