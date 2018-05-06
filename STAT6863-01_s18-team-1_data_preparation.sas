@@ -32,9 +32,37 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_d
 ;
 %let inputDataset1Type = CSV;
 
+*
+[Dataset 2 Name] players_stats_data
+
+[Dataset Description] Stats for each NBA player in 2014-2015 that, along with
+player stats, includes personal variables such as height, weight, college, and
+others.
+
+[Experimental Unit Description] Each player that played during the 2014-2015
+NBA season.
+
+[Number of Observations] 491
+
+[Number of Features] 34
+
+[Data Source]
+https://github.com/stat6863/team-1_project_repo/blob/master/data/
+players_stats.xls
+
+[Data Dictionary] https://www.kaggle.com/drgilermo/nba-players-stats-20142015/
+data
+
+[Unique ID Schema] Name is a primary key for the unique id.
+;
+%let inputDataset2DSN = players_stats_data_raw;
+%let inputDataset2URL =
+https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_1516_data.csv?raw=true
+;
+%let inputDataset2Type = CSV;
 
 *
-[Dataset 2 Name] 2016-17_officialBoxScore
+[Dataset 3 Name] 2016-17_officialBoxScore
 
 [Dataset Description] All NBA Team Statistics for Every Game, AY,2016-17
 
@@ -52,15 +80,15 @@ every game that was played in the regular season.
 [Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make
 a unique ID.
 ;
-%let inputDataset2DSN = teamBoxScore_16_17_raw;
-%let inputDataset2URL =
+%let inputDataset3DSN = teamBoxScore_16_17_raw;
+%let inputDataset3URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16_17.csv?raw=true
 ;
-%let inputDataset2Type = CSV;
+%let inputDataset3Type = CSV;
 
 
 *
-[Dataset 3 Name] PLAYER_ANTHRO
+[Dataset 4 Name] PLAYER_ANTHRO
 
 [Dataset Description] Anthropology of NBA draft players participating in the NBA
 combine.
@@ -78,11 +106,11 @@ combine.
 [Unique ID Schema] The columns "PLAYER” and “YEAR” can be combined to create
 an unique identifier.
 ;
-%let inputDataset3DSN = player_anthro;
-%let inputDataset3URL =
+%let inputDataset4DSN = player_anthro;
+%let inputDataset4URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/nba_combine_anthro.csv?raw=true
 ;
-%let inputDataset3Type = CSV;
+%let inputDataset4Type = CSV;
 
 * set global system options;
 options fullstimer;
@@ -121,7 +149,7 @@ options fullstimer;
 %mend;
 %macro loadDatasets;
 *change the 3 to 4 if we decide to add another dataset;
-%do i = 1 %to 3;
+%do i = 1 %to 4;
         %loadDataIfNotAlreadyAvailable(
             &&inputDataset&i.DSN.,
             &&inputDataset&i.URL.,
@@ -231,7 +259,7 @@ proc sql;
 	;
 quit;
 
-* Every team only plays once a day and therefore using team and date variables 
+* Every team only plays once a day and therefore using team and date variables
 as a unique identifier, we can get unduplicated counts for our ID.
 ;
 
@@ -253,7 +281,7 @@ as a unique identifier, we can get unduplicated counts for our ID.
 
 
 * Inspecting Height in our player Anthro Data;
-	
+
 
 	title "Inspect Height in player_anthro";
 	proc sql;
@@ -306,16 +334,16 @@ data table players_stats_data_and_anthro_v1;
         DREB
         STL
         BLK
-        HEIGHT_SHOES 
+        HEIGHT_SHOES
         WINGSPAN
     ;
     keep
-        PLAYER 
+        PLAYER
         PTS
         DREB
         STL
         BLK
-        HEIGHT_SHOES 
+        HEIGHT_SHOES
         WINGSPAN
     ;
     merge
@@ -340,7 +368,7 @@ maximum of about 5600 KB of memory on the computer they were tested on;
 proc sql;
     create table players_stats_data_and_anthro_v2 as
         select
-             coalesce(pa.PLAYER,ps.Name) as PLAYER 
+             coalesce(pa.PLAYER,ps.Name) as PLAYER
             ,ps.PTS
             ,ps.DREB
             ,ps.STL
