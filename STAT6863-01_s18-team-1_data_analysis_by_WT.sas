@@ -96,3 +96,7 @@ proc sql;
   select avg(_3PA)*82 as ThreesAttempted1516
   from players_stats_data_raw_1516;
 quit;
+
+*The results show that clearly there are many more attempts in the 15-16 season
+than there are in the 14-15 season, confirming our theory that 3 pointers
+attempted are indeed increasing, and at a rapid rate. 
