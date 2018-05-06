@@ -79,8 +79,53 @@ proc sql outobs=10;
          when AVG(pts) >= 10 then 'dd_pts'
          else 'sd_pts' end as pts_volume /* Double Digit indicator */
         ,AVG(pts) as avg_player_pts      /* Average player points */ 
-	,AVG(wingspan) as avg_player_ws  /* Average wingspan */
+	    ,AVG(wingspan) as avg_player_ws  /* Average wingspan */
     from
         player_stats_and_anthro_v2
     ;
 quit;
+
+
+*******************************************************************************;
+proc sql outobs=10;
+    select
+	     player
+		,case when FG_PCT >= 40 then 'elite'
+		 else 'non-elite' end as elite_ind
+		,AVG(pts) as avg_player_pts
+	from 
+	    player_stats_all
+	group by
+         1
+		,2
+	having MIN >= 2000
+	order by 
+        MIN desc
+	;
+quit;
+
+proc rank
+        groups=4
+		data=player_stats_all
+		out=player_stats_rank
+    ;
+    var pts;
+	ranks pts_rank;
+run;
+proc means min q1 median q3 max data=player_stats_rank;
+    class pts_rank;
+	var pts;
+run;
+
+proc rank
+        groups=4
+		data=player_stats_and_anthro_v2
+		out=player_stats_and_anthro_rank
+    ;
+    var wingspan;
+	ranks ws_rank;
+run;
+proc means min q1 median q3 max data=player_stats_and_anthro_rank;
+    class ws_rank;
+	var wingspan;
+run;
