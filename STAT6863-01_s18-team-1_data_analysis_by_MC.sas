@@ -16,21 +16,36 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: How do the NBA players having the best shooting percentage per season
-compare with the single game best shooting performances from teams?
+Question: How do the NBA players overall shooting percentage for the 2014-15
+season compare with the players with the overall shooting percentages for the
+2015-16 season?
 
-Rationale:  This will help tell us if the best shooting players on average
-perform better than a team's overall performance in a game.
+Rationale:  This will help tell us if the NBA players on average shot better
+than in the previous season.
 
 Note:  We would be looking at data for the 2014-15 NBA season in the
-player_stats dataset using the "Name" and "FG%" columns along with the
-teamBoxScore_16-17 dataset using the columns "teamAbbr" and "teamFG%".
+players_stats_data dataset using the "Name" and "FG_PCT" columns along with the
+players_stats_1516_data dataset using the columns "Player" and "FG_PCT".
 
-Limitations:  We aren't comparing with an equal sample size for the two
-datasets we are testing on given that this would compare a player's season
-average with a team's performance in just one single game.
+Limitations:  .Since we are comparing data over a two year period, we can't
+exactly conclude much as far as whether there is a trend from the small
+timeline.
 ;
 
+proc means min q1 median q3 max data=player_stats_all;
+	class Name Player;
+	var	FG_PCT;
+run;
+
+proc sql;
+	create table FG_PCT_COMPARE as
+	(select
+		*
+	from
+		work.players_stats_all
+	)
+	;
+quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -46,7 +61,7 @@ assists on a game by game basis.  It will also be interesting to see if the
 best assist teams have one of the leaders in that category, or if the team
 assists are a more collective team effort.
 
-Note:  We will be using the player_stats dataset with the columns "Name",
+Note:  We will be using the players_stats_data dataset with the columns "Name",
 "AST", and "Team", and the teamBoxScore_16-17 dataset for this analysis while
 using the columns "teamAbbr" and "teamAST".  Due to the data in each dataset
 being two years apart, some players may not be on the same team in both
@@ -54,10 +69,34 @@ datasets.
 
 Limitations:  Given how any stat from a NBA player doesn't exactly correlate
 with a team's stat, the conclusions for this experiment may not be entirely
-conclusive.
+conclusive.  We also aren't comparing with an equal sample size for the two
+datasets we are testing on given that this would compare a player's season
+average with a team's performance in just one single game
 ;
 
+proc rank
+		groups=10
+		data=players_stats_data
+		out=players_stats_data_ranked
+	;
+	var AST;
+	ranks AST_rank;
+run;
+proc rank
+		groups=10
+		data=teamBoxscore_16_17
+		out=teamBoxscore_16_17_ranked
+	;
+	var teamAST;
+	ranks teamAST_rank;
+run;
 
+proc compare
+		base=players_stats_data
+		compare=teamBoxscore_16_17
+		novalues
+	;
+run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -70,9 +109,9 @@ larger factor towards producing more rebounds.  General managers of teams could
 use this analysis when determining which furture NBA players to draft to the
 team.
 
-Note:  We will be using the columns "Name" and "REB" from the player_stats
-dataset along with the columns "HEIGHT_SHOES" and "WEIGHT" in the
-nba_combine_anthro dataset.
+Note:  We will be using the columns "Name" and "REB" from the
+players_stats_data dataset along with the columns "HEIGHT_SHOES" and "WEIGHT" in
+the nba_combine_anthro dataset.
 
 Limitations:  Since the player list for the player_anthro data is only showing
 heights and weights for players from the NBA combine, the comparision may not
