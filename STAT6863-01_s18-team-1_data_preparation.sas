@@ -451,7 +451,6 @@ proc sql;
              ,p1415.FG_PCT
              ,p1415._3PM
              ,p1415._3PA
-             ,p1415._3Per
              ,p1415.MIN
              ,p1415.AST
              ,p1415.REB
@@ -464,7 +463,6 @@ proc sql;
             ,p1516.FG_PCT
             ,p1516._3PM
             ,p1516._3PA
-            ,p1516._3Per
             ,p1516.MIN
             ,p1516.AST
             ,p1516.REB
