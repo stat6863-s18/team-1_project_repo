@@ -441,50 +441,50 @@ value;
 data player_stats_all_v1;
     retain
         season
-		name
-		FG_PCT
-		_3PM
-		_3PA
-		MIN
-		AST
-		REB
+        name
+        FG_PCT
+        _3PM
+        _3PA
+        MIN
+        AST
+        REB
     ;
-	keep
-	    season
-		name
-		FG_PCT
-		_3PM
-		_3PA
-		MIN
-		AST
-		REB
-	;
-	length 
+    keep
+        season
+        name
+        FG_PCT
+        _3PM
+        _3PA
+        MIN
+        AST
+        REB
+    ;
+    length 
         season $4.
-	;
-	set 
+    ;
+    set 
         players_stats_data_raw(
-		rename = (
-		    name = player
-		)
-		players_stats_data_raw_1516(
-		rename = (
-		    name = player
-		)
+        rename = (
+            name = player
+        )
+        players_stats_data_raw_1516(
+        rename = (
+            name = player
+        )
     by
-	    name
-	;
+        name
+    ;
 
-	if
-	    players_stats_data_raw
-	then
-	    do;
-		    season = "2014";
-		end;
-	else
-	    do;
-		    season = "2015";
-		end;
+    if
+        players_stats_data_raw
+    then
+        do;
+            season = "2014";
+        end;
+    else
+        do;
+            season = "2015";
+        end;
 run;
 proc sort data=player_stats_all_v1;
     by player year;
@@ -496,7 +496,7 @@ sql;
 proc sql;
     create table player_stats_all_v2 as
       ( select
-	          "2014" as season
+              "2014" as season
              ,p1415.Name as Player
              ,p1415.FG_PCT
              ,p1415._3PM
@@ -509,7 +509,7 @@ proc sql;
       )
         outer union corr
       ( select
-	         "2015" as season
+             "2015" as season
             ,p1516.Player
             ,p1516.FG_PCT
             ,p1516._3PM
@@ -529,7 +529,7 @@ quit;
 identical;
 proc compare
         base=player_stats_all_v1
-		compare=player_stats_all_v2
-		novalues
+        compare=player_stats_all_v2
+        novalues
 	;
 run;
