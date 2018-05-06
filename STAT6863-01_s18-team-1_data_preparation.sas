@@ -365,7 +365,7 @@ run;
 match-merge;
 * Note:  After running the data step and proc sort below several times and
 averaging the fullstimer step, they tend to take about .01 seconds of "real
-time" to execute and a maximum of about 1250 KB of memory on the computer they
+time" to execute and a maximum of about 1250 KB of memory usage on the computer they
 were tested on;
 data table players_stats_data_and_anthro_v1;
     retain
