@@ -35,25 +35,21 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_d
 *
 [Dataset 2 Name] players_stats_data
 
-[Dataset Description] Stats for each NBA player in 2014-2015 that, along with
-player stats, includes personal variables such as height, weight, college, and
-others.
+[Dataset Description] Stats for each NBA player in the 2015-2016 season. 
 
-[Experimental Unit Description] Each player that played during the 2014-2015
+[Experimental Unit Description] Each player that played during the 2015-2016
 NBA season.
 
-[Number of Observations] 491
+[Number of Observations] 501
 
-[Number of Features] 34
+[Number of Features] 21
 
 [Data Source]
-https://github.com/stat6863/team-1_project_repo/blob/master/data/
-players_stats.xls
+https://github.com/mcardoso3-stat6863/team-1_project_repo/blob/master/data/players_stats_1516_data.csv
 
-[Data Dictionary] https://www.kaggle.com/drgilermo/nba-players-stats-20142015/
-data
+[Data Dictionary]https://www.basketball-reference.com/leagues/NBA_2016_per_game.html
 
-[Unique ID Schema] Name is a primary key for the unique id.
+[Unique ID Schema] Player is a primary key for the unique id.
 ;
 %let inputDataset2DSN = players_stats_data_raw_1516;
 %let inputDataset2URL =
@@ -195,7 +191,18 @@ proc sql;
 	;
 quit;
 
-* For our all three of our datasets we can see that we have no missing ID values,
+proc sql;
+	create table players_stats_data_1516_nmiss as
+		select
+			Player
+		from
+			work.players_stats_data_raw_1516
+		where
+			Player is missing
+	;
+quit;
+
+* For all four of our datasets we can see that we have no missing ID values,
 which in our case is Name, or a combination of name and position. No rows are
 selected when we query missing values for names.
 ;
@@ -263,6 +270,23 @@ quit;
 as a unique identifier, we can get unduplicated counts for our ID.
 ;
 
+proc sql;
+	create table players_stats_data_1516_dups as
+		select
+			Player
+			,count(*) as row_count
+		from
+			work.players_stats_data_raw_1516
+		group by
+			Player
+		having
+		row_count > 1
+	;
+quit;
+
+*We can see that no player names are duplicated in this case, and therefore we
+have no duplicate ID values.
+;
 
 * Inspecting Team Assists in our team box score data;
 	/*
@@ -299,7 +323,7 @@ as a unique identifier, we can get unduplicated counts for our ID.
 
 * Inspecting # points made in our player statistics data;
 
-	title "Inspect 3PM in player_stats_raw";
+	title "Inspect 3PM in players_stats_data_raw";
 	proc sql;
 		select
 			min(_3PM) as min
@@ -308,6 +332,22 @@ as a unique identifier, we can get unduplicated counts for our ID.
 			,median(_3PM) as median
 		from
 			work.players_stats_data_raw
+		;
+	quit;
+	title;
+
+
+* Inspecting Field Goal Percentage in our player statistics 2015-16 data;
+
+	title "Inspect FG_PCT in players_stats_data_raw_1516";
+	proc sql;
+		select
+			min(FG_PCT) as min
+			,max(FG_PCT) as max
+			,mean(FG_PCT) as average
+			,median(FG_PCT) as median
+		from
+			work.players_stats_data_raw_1516
 		;
 	quit;
 	title;
