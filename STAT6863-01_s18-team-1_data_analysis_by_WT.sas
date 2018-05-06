@@ -34,7 +34,7 @@ is not being incorrectly attributed certain statistics.
 
 proc sql;
         select
-				HEIGHT_SHOES
+	         HEIGHT_SHOES
                 ,avg(DREB) as AvgDREB
                 ,avg(STL) as AvgSTL
                 ,avg(BLK) as AvgBLK
