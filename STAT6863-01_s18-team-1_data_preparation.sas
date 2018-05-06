@@ -365,8 +365,8 @@ run;
 match-merge;
 * Note:  After running the data step and proc sort below several times and
 averaging the fullstimer step, they tend to take about .01 seconds of "real
-time" to execute and a maximum of about 1950 KB of memory (1250 KB for the data
-step vs. 700 KB for the proc sort step) on the computer they were tested on;
+time" to execute and a maximum of about 1250 KB of memory on the computer they
+were tested on;
 data table players_stats_data_and_anthro_v1;
     retain
         PLAYER
@@ -404,7 +404,9 @@ run;
 * combine players_stats_data and player_anthro horizontally using proc sql;
 * Note:  After running this proc sql step and averaging the fullstimer output in
 the SAS log, they take about .02 seconds of "real time" to execute and a
-maximum of about 5600 KB of memory on the computer they were tested on;
+maximum of about 5600 KB of memory on the computer they were tested on.  The
+proc sql step appears to slightly take more time than the combined data step
+and proc sort step while using nearly five times as much memory;
 proc sql;
     create table players_stats_data_and_anthro_v2 as
         select
