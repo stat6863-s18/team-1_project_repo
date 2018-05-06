@@ -393,3 +393,22 @@ proc compare
         novalues
     ;
 run;
+
+* combine players_stats_data and player_stats_data_1516 vertically using proc 
+sql;
+proc sql;
+    create table player_stats_all as
+      ( select
+             *
+        from
+            work.players_stats_data_raw as p1415
+      )
+        outer union corr
+      ( select
+             *
+        from
+            work.players_stats_data_raw_1516 as p1516
+      )
+        order by
+            PLAYER;
+quit;
