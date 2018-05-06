@@ -69,6 +69,14 @@ in a column and Last Name is in a seperate column. We must figure out whether
 Middle names might affect our ID variable. It seems like player_stats only uses
 first and last name, but team_box_score uses multiple.
 ;
+proc sql;
+  select
+      teamAbbr
+      ,teamRsIt
+      ,team3PA
+  from teamBoxScore_16_17_raw
+  group by teamAbbr;
+quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -99,4 +107,4 @@ quit;
 
 *The results show that clearly there are many more attempts in the 15-16 season
 than there are in the 14-15 season, confirming our theory that 3 pointers
-attempted are indeed increasing, and at a rapid rate. 
+attempted are indeed increasing, and at a rapid rate.
