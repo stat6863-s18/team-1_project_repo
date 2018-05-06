@@ -55,7 +55,7 @@ data
 
 [Unique ID Schema] Name is a primary key for the unique id.
 ;
-%let inputDataset2DSN = players_stats_data_raw;
+%let inputDataset2DSN = players_stats_data_raw_1516;
 %let inputDataset2URL =
 https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_1516_data.csv?raw=true
 ;
