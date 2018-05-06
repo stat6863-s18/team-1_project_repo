@@ -394,7 +394,7 @@ proc compare
     ;
 run;
 
-* combine players_stats_data and player_stats_data_1516 vertically using proc
+* combine players_stats_data and player_stats_data_1516 vertically using proc 
 sql;
 proc sql;
     create table player_stats_all as
