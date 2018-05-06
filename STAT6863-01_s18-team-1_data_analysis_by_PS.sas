@@ -32,6 +32,36 @@ both datasets are in two different seasons which would need to be stated in
 order to answer my research question.
 ;
 
+proc sql outobs=10;
+    select
+	     player
+		,case when FG_PCT >= 40 then 'elite'
+		 else 'non-elite' end as elite_ind
+		,AVG(AST) as avg_player_AST
+		,AVG(REB) as avg_player_REB
+	from 
+	    player_stats_all_v2
+	group by
+         1
+		,2
+	having MIN >= 2000
+	order by 
+        MIN desc
+	;
+quit;
+
+proc rank
+        groups=4
+		data=player_stats_all
+		out=player_stats_rank
+    ;
+    var FG_PCT;
+	ranks FG_PCT_rank;
+run;
+proc means min q1 median q3 max data=player_stats_rank;
+    class FG_PCT_rank;
+	var FG_PCT;
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -85,37 +115,6 @@ proc sql outobs=10;
     ;
 quit;
 
-
-*******************************************************************************;
-proc sql outobs=10;
-    select
-	     player
-		,case when FG_PCT >= 40 then 'elite'
-		 else 'non-elite' end as elite_ind
-		,AVG(pts) as avg_player_pts
-	from 
-	    player_stats_all
-	group by
-         1
-		,2
-	having MIN >= 2000
-	order by 
-        MIN desc
-	;
-quit;
-
-proc rank
-        groups=4
-		data=player_stats_all
-		out=player_stats_rank
-    ;
-    var pts;
-	ranks pts_rank;
-run;
-proc means min q1 median q3 max data=player_stats_rank;
-    class pts_rank;
-	var pts;
-run;
 
 proc rank
         groups=4

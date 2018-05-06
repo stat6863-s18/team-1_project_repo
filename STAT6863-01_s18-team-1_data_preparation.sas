@@ -439,15 +439,65 @@ run;
 data-step interweave, combining composite key values into a single primary key
 value;
 data player_stats_all_v1;
-  retain _ALL_;
-  set work.players_stats_data_raw;
+    retain
+        season
+        name
+        FG_PCT
+        _3PM
+        _3PA
+        MIN
+        AST
+        REB
+    ;
+    keep
+        season
+        name
+        FG_PCT
+        _3PM
+        _3PA
+        MIN
+        AST
+        REB
+    ;
+    length 
+        season $4.
+    ;
+    set 
+        players_stats_data_raw(
+        rename = (
+            name = player
+        )
+        players_stats_data_raw_1516(
+        rename = (
+            name = player
+        )
+    by
+        name
+    ;
+
+    if
+        players_stats_data_raw
+    then
+        do;
+            season = "2014";
+        end;
+    else
+        do;
+            season = "2015";
+        end;
+run;
+proc sort data=player_stats_all_v1;
+    by player year;
+run;
+
 
 * combine players_stats_data and player_stats_data_1516 vertically using proc
 sql;
 proc sql;
     create table player_stats_all_v2 as
       ( select
-             p1415.Name as Player
+              "2014" as season
+             ,p1415.Name as Player
              ,p1415.FG_PCT
              ,p1415._3PM
              ,p1415._3PA
@@ -459,7 +509,8 @@ proc sql;
       )
         outer union corr
       ( select
-            p1516.Player
+             "2015" as season
+            ,p1516.Player
             ,p1516.FG_PCT
             ,p1516._3PM
             ,p1516._3PA
@@ -470,5 +521,15 @@ proc sql;
             work.players_stats_data_raw_1516 as p1516
       )
         order by
-            Player;
+            Player
+            season;
 quit;
+
+* verify that player_stats_all_v1 and player_stats_all_v2 are 
+identical;
+proc compare
+        base=player_stats_all_v1
+        compare=player_stats_all_v2
+        novalues
+	;
+run;
