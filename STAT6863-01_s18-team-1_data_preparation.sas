@@ -487,7 +487,7 @@ data player_stats_all_v1;
         end;
 run;
 proc sort data=player_stats_all_v1;
-    by player year;
+    by player season;
 run;
 
 
