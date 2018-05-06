@@ -394,21 +394,43 @@ proc compare
     ;
 run;
 
-* combine players_stats_data and player_stats_data_1516 vertically using proc 
+
+* combine players_stats_data and player_stats_data_1516 vertically using a
+data-step interweave, combining composite key values into a single primary key
+value;
+data player_stats_all_v1;
+  retain _ALL_;
+  set work.players_stats_data_raw;
+
+* combine players_stats_data and player_stats_data_1516 vertically using proc
 sql;
 proc sql;
-    create table player_stats_all as
+    create table player_stats_all_v2 as
       ( select
-             *
+             p1415.Name as Player
+             ,p1415.FG_PCT
+             ,p1415._3PM
+             ,p1415._3PA
+             ,p1415._3Per
+             ,p1415.MIN
+             ,p1415.AST
+             ,p1415.REB
         from
             work.players_stats_data_raw as p1415
       )
         outer union corr
       ( select
-             *
+            p1516.Player
+            ,p1516.FG_PCT
+            ,p1516._3PM
+            ,p1516._3PA
+            ,p1516._3Per
+            ,p1516.MIN
+            ,p1516.AST
+            ,p1516.REB
         from
             work.players_stats_data_raw_1516 as p1516
       )
         order by
-            PLAYER;
+            Player;
 quit;
