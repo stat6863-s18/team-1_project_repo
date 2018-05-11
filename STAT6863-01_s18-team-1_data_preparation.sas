@@ -1,3 +1,4 @@
+identical;
 *******************************************************************************;
 **************** 80-character banner for column width reference ***************;
 * (set window width to banner width to calibrate line length to 80 characters *;
@@ -440,10 +441,18 @@ run;
 * combine players_stats_data and player_stats_data_1516 vertically using a
 data-step interweave, combining composite key values into a single primary key
 value;
+* note: After running the data step and proc sort step below and averaging the
+fullstimer output in the system log, they tend to take about 0.01 seconds of
+"real time" to execute and a maximum of 2 MB of memory (1113 KB for the data 
+step vs 757 KB for proc sort step) on the computer they were tested on;
+proc sort data=players_stats_data_raw_1516;
+	by player;
+run;
+
 data player_stats_all_v1;
 	retain
-		season
-		name
+		year
+		player
 		FG_PCT
 		_3PM
 		_3PA
@@ -452,8 +461,8 @@ data player_stats_all_v1;
 		REB
 	;
 	keep
-		season
-		name
+		year
+		player
 		FG_PCT
 		_3PM
 		_3PA
@@ -462,36 +471,33 @@ data player_stats_all_v1;
 		REB
 	;
 	length 
-		season $4.
+		year $4.
 	;
 	set 
 		players_stats_data_raw(
-			rename = (
+            in = players_stats_data_row
+            rename = (
 				name = player
 			)
 		)
-		players_stats_data_raw_1516(
-			rename = (
-				name = player
-			)
-		)
+		players_stats_data_raw_1516
 	;
 	by
-		name
+		player
 	;
 	if
-		players_stats_data_raw
+		players_stats_data_row=1
 	then
 		do;
-			season = "2014";
+			year = '2014';
 		end;
 	else
 		do;
-			season = "2015";
+			year = '2015';
 		end;
 run;
 proc sort data=player_stats_all_v1;
-	by player season;
+	by player year;
 run;
 
 
@@ -500,7 +506,7 @@ sql;
 proc sql;
 	create table player_stats_all_v2 as
 		( select
-			"2014" as season
+			 "2014" as year
 			,p1415.Name as Player
 			,p1415.FG_PCT
 			,p1415._3PM
@@ -513,7 +519,7 @@ proc sql;
 		)
 		outer union corr
 		( select
-			"2015" as season
+			 "2015" as year
 			,p1516.Player
 			,p1516.FG_PCT
 			,p1516._3PM
@@ -525,8 +531,8 @@ proc sql;
 			work.players_stats_data_raw_1516 as p1516
 		)
 		order by
-			Player
-			,season;
+			 Player
+			,year;
 quit;
 
 * verify that player_stats_all_v1 and player_stats_all_v2 are 
