@@ -1,4 +1,3 @@
-identical;
 *******************************************************************************;
 **************** 80-character banner for column width reference ***************;
 * (set window width to banner width to calibrate line length to 80 characters *;
@@ -439,12 +438,13 @@ run;
 
 
 * combine players_stats_data and player_stats_data_1516 vertically using a
-data-step interweave, combining composite key values into a single primary key
-value;
-* note: After running the data step and proc sort step below and averaging the
-fullstimer output in the system log, they tend to take about 0.01 seconds of
-"real time" to execute and a maximum of 2 MB of memory (1113 KB for the data 
-step vs 757 KB for proc sort step) on the computer they were tested on;
+data-step interweave, combining composite key values into a single primary 
+key value;
+* note: After running the data step and proc sort step below and averaging 
+the fullstimer output in the system log, they tend to take about 0.01 seconds 
+of "real time" to execute and a maximum of 2 MB of memory (1113 KB for the 
+data step vs 757 KB for proc sort step) on the computer they were tested on;
+
 proc sort data=players_stats_data_raw_1516;
 	by player;
 run;
@@ -501,8 +501,13 @@ proc sort data=player_stats_all_v1;
 run;
 
 
-* combine players_stats_data and player_stats_data_1516 vertically using proc
-sql;
+* combine players_stats_data and player_stats_data_1516 vertically using 
+proc sql;
+* note: After running the proc sql step below and averaging the
+fullstimer output in the system log, they tend to take about 0.02 seconds 
+of "real time" to execute and a maximum of 6 MB of memory (5684 KB for proc 
+sql step) on the computer they were tested on. The proc sql step takes a
+little longer but not much to see a noticeable difference;
 proc sql;
 	create table player_stats_all_v2 as
 		( select
