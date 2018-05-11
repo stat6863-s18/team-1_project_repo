@@ -466,13 +466,16 @@ data player_stats_all_v1;
 	;
 	set 
 		players_stats_data_raw(
-		rename = (
-			name = player
+			rename = (
+				name = player
+			)
 		)
 		players_stats_data_raw_1516(
-		rename = (
-			name = player
+			rename = (
+				name = player
+			)
 		)
+	;
 	by
 		name
 	;
@@ -523,7 +526,7 @@ proc sql;
 		)
 		order by
 			Player
-			season;
+			,season;
 quit;
 
 * verify that player_stats_all_v1 and player_stats_all_v2 are 
