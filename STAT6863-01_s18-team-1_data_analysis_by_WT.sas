@@ -75,9 +75,9 @@ proc sql;
       		,teamRsIt
       		,team3PA
   	from 
-  			teamBoxScore_16_17_raw
+  		teamBoxScore_16_17_raw
   	group by 
-  			teamAbbr;
+  		teamAbbr;
 quit;
 
 *******************************************************************************;
