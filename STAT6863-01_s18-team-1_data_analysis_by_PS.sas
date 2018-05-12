@@ -83,6 +83,47 @@ and 2015-2016, respectively.
 ;
 
 
+proc sql outobs=10;
+    select
+	     player
+		,year
+		,AVG(FG_PCT) as avg_player_FG
+		,AVG(AST) as avg_player_AST
+		,AVG(REB) as avg_player_REB
+	from 
+	    player_stats_all_v2
+	group by
+         1
+		,2
+	;
+quit;
+
+proc rank
+        groups=4
+		data=player_stats_all
+		out=pos_stats_rank
+    ;
+    var AST;
+	ranks AST_rank;
+run;
+proc means min q1 median q3 max data=pos_stats_rank;
+    class year AST_rank;
+	var AST;
+run;
+
+proc rank
+        groups=4
+		data=player_stats_all
+		out=pos_stats_rank2
+    ;
+    var REB;
+	ranks REB_rank;
+run;
+proc means min q1 median q3 max data=pos_stats_rank2;
+    class year REB_rank;
+	var REB;
+run;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;

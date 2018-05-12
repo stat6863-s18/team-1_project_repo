@@ -33,7 +33,7 @@ is not being incorrectly attributed certain statistics.
 ;
 
 proc sql;
-        select
+	select
 	         HEIGHT_SHOES
                 ,avg(DREB) as AvgDREB
                 ,avg(STL) as AvgSTL
@@ -70,12 +70,14 @@ Middle names might affect our ID variable. It seems like player_stats only uses
 first and last name, but team_box_score uses multiple.
 ;
 proc sql;
-  select
-      teamAbbr
-      ,teamRsIt
-      ,team3PA
-  from teamBoxScore_16_17_raw
-  group by teamAbbr;
+	select
+      		teamAbbr
+      		,teamRsIt
+      		,team3PA
+  	from 
+  		teamBoxScore_16_17_raw
+  	group by 
+  		teamAbbr;
 quit;
 
 *******************************************************************************;
@@ -98,11 +100,15 @@ more years of data would have to be added in to make a conclusion with more
 certainty.
 ;
 proc sql;
-  select avg(_3PA) as ThreesAttempted1415
-  from players_stats_data_raw
-  outer union corr
-  select avg(_3PA)*82 as ThreesAttempted1516
-  from players_stats_data_raw_1516;
+  	select 
+  		avg(_3PA) as ThreesAttempted1415
+  	from 
+  		players_stats_data_raw
+	outer union corr
+  	select 
+  		avg(_3PA)*82 as ThreesAttempted1516
+  	from 
+  		players_stats_data_raw_1516;
 quit;
 
 *The results show that clearly there are many more attempts in the 15-16 season
