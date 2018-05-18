@@ -361,190 +361,193 @@ proc sort data=work.player_anthro;
 	by PLAYER;
 run;
 
-* combine players_stats_data and player_anthro horizontally using data-step
-match-merge;
-* Note:  After running the data step and proc sort below several times and
-averaging the fullstimer step, they tend to take about .01 seconds of "real
-time" to execute and a maximum of about 1250 KB of memory usage on the
-computer they were tested on;
-data table players_stats_data_and_anthro_v1;
-	retain
-		PLAYER
-		PTS
-		DREB
- 		STL
-		BLK
-		HEIGHT_SHOES
-		WINGSPAN
-	;
-	keep
-		PLAYER
-		PTS
-		DREB
-		STL
-		BLK
-		HEIGHT_SHOES
-		WINGSPAN
-	;
-	merge
-		work.player_anthro
-		work.players_stats_data_raw(
-			rename=(
-				Name=PLAYER
+
+/*
+	* combine players_stats_data and player_anthro horizontally using data-step
+	match-merge;
+	* Note:  After running the data step and proc sort below several times and
+	averaging the fullstimer step, they tend to take about .01 seconds of "real
+	time" to execute and a maximum of about 1250 KB of memory usage on the
+	computer they were tested on;
+	data table players_stats_data_and_anthro_v1;
+		retain
+			PLAYER
+			PTS
+			DREB
+ 			STL
+			BLK
+			HEIGHT_SHOES
+			WINGSPAN
+		;
+		keep
+			PLAYER
+			PTS
+			DREB
+			STL
+			BLK
+			HEIGHT_SHOES
+			WINGSPAN
+		;
+		merge
+			work.player_anthro
+			work.players_stats_data_raw(
+				rename=(
+					Name=PLAYER
+				)
 			)
-		)
-	;
-	by PLAYER;
-run;
+		;
+		by PLAYER;
+	run;
 
-proc sort data=players_stats_data_and_anthro_v1;
-	by PLAYER;
-run;
+	proc sort data=players_stats_data_and_anthro_v1;
+		by PLAYER;
+	run;
 
-* combine players_stats_data and player_anthro horizontally using proc sql;
-* Note:  After running this proc sql step and averaging the fullstimer output
-in the SAS log, they take about .02 seconds of "real time" to execute and a
-maximum of about 5600 KB of memory on the computer they were tested on.  The
-proc sql step appears to slightly take more time than the combined data step
-and proc sort step while using nearly five times as much memory;
-proc sql;
-	create table players_stats_data_and_anthro_v2 as
-		select
-			coalesce(pa.PLAYER,ps.Name) as PLAYER
-			,ps.PTS
-			,ps.DREB
-			,ps.STL
-			,ps.BLK
-			,pa.HEIGHT_SHOES
-			,pa.WINGSPAN
-		from
-			work.player_anthro as pa
-		full join
-			work.players_stats_data_raw as ps
-		on
-			PLAYER = Name
-		order by
-			PLAYER;
-quit;
+	* combine players_stats_data and player_anthro horizontally using proc sql;
+	* Note:  After running this proc sql step and averaging the fullstimer
+	output in the SAS log, they take about .02 seconds of "real time" to
+	execute and a maximum of about 5600 KB of memory on the computer they were
+	tested on.  The proc sql step appears to slightly take more time than the
+	combined data step and proc sort step while using nearly five times as much
+	memory;
+	proc sql;
+		create table players_stats_data_and_anthro_v2 as
+			select
+				 coalesce(pa.PLAYER,ps.Name) as PLAYER
+				,ps.PTS
+				,ps.DREB
+				,ps.STL
+				,ps.BLK
+				,pa.HEIGHT_SHOES
+				,pa.WINGSPAN
+			from
+				work.player_anthro as pa
+			full join
+				work.players_stats_data_raw as ps
+			on
+				PLAYER = Name
+			order by
+				PLAYER;
+	quit;
 
-* verify that players_stats_data_and_anthro_v1 and
-players_stats_data_and_anthro_v2 are identical;
-proc compare
-		base=players_stats_data_and_anthro_v1
-		compare=players_stats_data_and_anthro_v2
-		novalues
-	;
-run;
+	* verify that players_stats_data_and_anthro_v1 and
+	players_stats_data_and_anthro_v2 are identical;
+	proc compare
+			base=players_stats_data_and_anthro_v1
+			compare=players_stats_data_and_anthro_v2
+			novalues
+		;
+	run;
 
 
-* combine players_stats_data and player_stats_data_1516 vertically using a
-data-step interweave, combining composite key values into a single primary 
-key value;
-* note: After running the data step and proc sort step below and averaging 
-the fullstimer output in the system log, they tend to take about 0.01 seconds 
-of "real time" to execute and a maximum of 2 MB of memory (1113 KB for the 
-data step vs 757 KB for proc sort step) on the computer they were tested on;
+	* combine players_stats_data and player_stats_data_1516 vertically using a
+	data-step interweave, combining composite key values into a single primary 
+	key value;
+	* note: After running the data step and proc sort step below and averaging 
+	the fullstimer output in the system log, they tend to take about 0.01
+	seconds of "real time" to execute and a maximum of 1113 KB of memory
+	(on the computer they were tested on;
 
-proc sort data=players_stats_data_raw_1516;
-	by player;
-run;
+	proc sort data=players_stats_data_raw_1516;
+		by player;
+	run;
 
-data player_stats_all_v1;
-	retain
-		year
-		player
-		FG_PCT
-		_3PM
-		_3PA
-		MIN
-		AST
-		REB
-	;
-	keep
-		year
-		player
-		FG_PCT
-		_3PM
-		_3PA
-		MIN
-		AST
-		REB
-	;
-	length 
-		year $4.
-	;
-	set 
-		players_stats_data_raw(
-            in = players_stats_data_row
-            rename = (
-				name = player
+	data player_stats_all_v1;
+		retain
+			year
+			player
+			FG_PCT
+			_3PM
+			_3PA
+			MIN
+			AST
+			REB
+		;
+		keep
+			year
+			player
+			FG_PCT
+			_3PM
+			_3PA
+			MIN
+			AST
+			REB
+		;
+		length 
+			year $4.
+		;
+		set
+			players_stats_data_raw(
+            	in = players_stats_data_row
+            	rename = (
+					name = player
+				)
 			)
-		)
-		players_stats_data_raw_1516
-	;
-	by
-		player
-	;
-	if
-		players_stats_data_row=1
-	then
-		do;
-			year = '2014';
-		end;
-	else
-		do;
-			year = '2015';
-		end;
-run;
-proc sort data=player_stats_all_v1;
-	by player year;
-run;
+			players_stats_data_raw_1516
+		;
+		by
+			player
+		;
+		if
+			players_stats_data_row=1
+		then
+			do;
+				year = '2014';
+			end;
+		else
+			do;
+				year = '2015';
+			end;
+	run;
+	proc sort data=player_stats_all_v1;
+		by player year;
+	run;
 
 
-* combine players_stats_data and player_stats_data_1516 vertically using 
-proc sql;
-* note: After running the proc sql step below and averaging the
-fullstimer output in the system log, they tend to take about 0.02 seconds 
-of "real time" to execute and a maximum of 6 MB of memory (5684 KB for proc 
-sql step) on the computer they were tested on. The proc sql step takes a
-little longer but not much to see a noticeable difference;
-proc sql;
-	create table player_stats_all_v2 as
-		( select
-			 "2014" as year
-			,p1415.Name as Player
-			,p1415.FG_PCT
-			,p1415._3PM
-			,p1415._3PA
-			,p1415.MIN
-			,p1415.AST
-			,p1415.REB
-		from
-			work.players_stats_data_raw as p1415
-		)
-		outer union corr
-		( select
-			 "2015" as year
-			,p1516.Player
-			,p1516.FG_PCT
-			,p1516._3PM
-			,p1516._3PA
-			,p1516.MIN
-			,p1516.AST
-			,p1516.REB
-		from
-			work.players_stats_data_raw_1516 as p1516
-		)
-		order by
-			 Player
-			,year;
-quit;
+	* combine players_stats_data and player_stats_data_1516 vertically using 
+	proc sql;
+	* note: After running the proc sql step below and averaging the fullstimer
+	output in the system log, they tend to take about 0.02 seconds of "real
+	time" to execute and a maximum of 6 MB of memory (5684 KB for proc sql
+	step) on the computer they were tested on. The proc sql step takes a little
+	longer but not much to see a noticeable difference;
+	proc sql;
+		create table player_stats_all_v2 as
+			( select
+				 "2014" as year
+				,p1415.Name as Player
+				,p1415.FG_PCT
+				,p1415._3PM
+				,p1415._3PA
+				,p1415.MIN
+				,p1415.AST
+				,p1415.REB
+			from
+				work.players_stats_data_raw as p1415
+			)
+			outer union corr
+			( select
+				 "2015" as year
+				,p1516.Player
+				,p1516.FG_PCT
+				,p1516._3PM
+				,p1516._3PA
+				,p1516.MIN
+				,p1516.AST
+				,p1516.REB
+			from
+				work.players_stats_data_raw_1516 as p1516
+			)
+			order by
+				 Player
+				,year;
+	quit;
 
-* verify that player_stats_all_v1 and player_stats_all_v2 are 
-identical;
-proc compare
-		base=player_stats_all_v1
-		compare=player_stats_all_v2
-		novalues
-	;
-run;
+	* verify that player_stats_all_v1 and player_stats_all_v2 are identical;
+	proc compare
+			base=player_stats_all_v1
+			compare=player_stats_all_v2
+			novalues
+		;
+	run;
+*/
