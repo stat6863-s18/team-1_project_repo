@@ -551,3 +551,56 @@ run;
 		;
 	run;
 */
+
+proc sql;
+		create table masterfile_raw as
+				select
+					*
+				from
+					(( select
+						 "2014" as year
+						,p1415.Name as Player
+						,p1415.FG_PCT
+						,Round(p1415._3PM/p1415.Games_Played,.1) as _3PM
+						,Round(p1415._3PA/p1415.Games_Played,.1) as _3PA
+						,Round(p1415.MIN/p1415.Games_Played,.1) as MIN
+						,Round(p1415.AST/p1415.Games_Played,.1) as AST
+						,Round(p1415.REB/p1415.Games_Played,.1) as REB
+						,Round(p1415.DREB/p1415.Games_Played,.1) as DREB
+						,Round(p1415.STL/p1415.Games_Played,.1) as STL
+						,Round(p1415.BLK/p1415.Games_Played,.1) as BLK
+					from
+						work.players_stats_data_raw as p1415
+					)
+					outer union corr
+					( select
+						 "2015" as year
+						,p1516.Player
+						,p1516.FG_PCT*100 as FG_PCT
+						,p1516._3PM
+						,p1516._3PA
+						,p1516.MIN
+						,p1516.AST
+						,p1516.REB
+						,p1516.DREB
+						,p1516.STL
+						,p1516.BLK
+					from
+						work.players_stats_data_raw_1516 as p1516
+					)) as ps
+			left join
+				work.player_anthro as pa
+			on
+				pa.PLAYER = ps.Player
+			order by
+				PLAYER;
+	quit;
+
+proc sort
+        nodupkey
+        data=masterfile_raw
+        out=masterfile
+    ;
+    by Player year    
+    ;
+run;

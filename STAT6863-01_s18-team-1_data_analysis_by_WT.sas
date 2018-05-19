@@ -39,29 +39,23 @@ proc sql;
                 ,avg(STL) as AvgSTL
                 ,avg(BLK) as AvgBLK
         from
-                player_stats_and_anthro_v2
-        where
-                not missing(PLAYER)
-        group by HEIGHT_SHOES
-        order by HEIGHT_SHOES
+                masterfile
+        group by Round(HEIGHT_SHOES,1)
+        order by Round(HEIGHT_SHOES,1)
         ;
 quit;
-
-proc print data=Height_Success;
-run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 
 *
-Question: Do team who make more 3 point shots win more games on average?
+Question: Which kind of guard scores more 3 pointers, SG or PG?
 
-Rationale: This would help inform a team that shooting the ball from beyond the
-arc would help the team win more games, which s the point of a competitive sport.
+Rationale: A point guard holds the ball more as he is the "quarterback of the
+team, but does that mean he also scores more?
 
-Note: This compares the column "3PM" and "Team" from player_stats to the column
-"TeamRslt" from team_box_score.
+Note: This compares the column "3PM" and "POS" from masterfile.
 
 Limitations: Our player_stats dataset has the name of all players in a single
 column. team_box_score has names in multiple columns, for example First name is
@@ -71,13 +65,12 @@ first and last name, but team_box_score uses multiple.
 ;
 proc sql;
 	select
-      		teamAbbr
-      		,teamRsIt
-      		,team3PA
+		POS
+		,avg(_3PM)
   	from 
-  		teamBoxScore_16_17_raw
+  		masterfile
   	group by 
-  		teamAbbr;
+  		POS;
 quit;
 
 *******************************************************************************;
@@ -100,17 +93,24 @@ more years of data would have to be added in to make a conclusion with more
 certainty.
 ;
 proc sql;
-  	select 
-  		avg(_3PA) as ThreesAttempted1415
+  	(select 
+  		year
+  		,avg(_3PA)
   	from 
-  		players_stats_data_raw
-	outer union corr
-  	select 
-  		avg(_3PA)*82 as ThreesAttempted1516
+  		masterfile
+  	where 
+  		year="2014")
+	union
+  	(select
+  		year
+  		,avg(_3PA)
   	from 
-  		players_stats_data_raw_1516;
+  		masterfile
+  	where 
+  		year="2015")
+  ;
 quit;
 
-*The results show that clearly there are many more attempts in the 15-16 season
+*The results show that there are in fact more attempts in the 15-16 season
 than there are in the 14-15 season, confirming our theory that 3 pointers
-attempted are indeed increasing, and at a rapid rate.
+attempted are indeed increasing. 
