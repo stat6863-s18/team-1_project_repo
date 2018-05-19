@@ -145,27 +145,35 @@ only rookie players who participated in the combine for 2014-2015.
 
 proc sql outobs=10;
     select
-         player
-        ,case when AVG(pts) is null then 'null'
-         when AVG(pts) >= 10 then 'dd_pts'
-         else 'sd_pts' end as pts_volume /* Double Digit indicator */
-        ,AVG(pts) as avg_player_pts      /* Average player points */ 
+		 year
+		,player
+        ,AVG(FG_PCT) as avg_player_pts      /* Average player points */ 
 	    ,AVG(wingspan) as avg_player_ws  /* Average wingspan */
     from
-        player_stats_and_anthro_v2
+        masterfile
     ;
 quit;
 
 
 proc rank
         groups=4
-		data=player_stats_and_anthro_v2
-		out=player_stats_and_anthro_rank
+		data=masterfile
+		out=masterfile_rank
     ;
-    var wingspan;
-	ranks ws_rank;
+    var FG_PCT wingspan;
+	ranks FG_PCT_rank ws_rank;
 run;
-proc means min q1 median q3 max data=player_stats_and_anthro_rank;
-    class ws_rank;
-	var wingspan;
+proc freq data=masterfile_rank;
+	table
+		FG_PCT_rank
+		ws_rank
+	;
+	where
+		year = '2015'
+	;
+run;
+proc means min q1 median q3 max data=masterfile_rank;
+	class FG_PCT_rank ws_rank;
+	var FG_PCT wingspan;
+	where year = '2015';
 run;
