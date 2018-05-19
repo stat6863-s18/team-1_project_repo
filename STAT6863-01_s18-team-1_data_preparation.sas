@@ -553,7 +553,7 @@ run;
 */
 
 proc sql;
-		create table masterfile as
+		create table masterfile_raw as
 				select
 					*
 				from
@@ -595,3 +595,12 @@ proc sql;
 			order by
 				PLAYER;
 	quit;
+
+proc sort
+        nodupkey
+        data=masterfile_raw
+        out=masterfile
+    ;
+    by Player year    
+    ;
+run;
