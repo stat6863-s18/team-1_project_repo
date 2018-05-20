@@ -9,7 +9,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-01_s18-team-1_project_data_preparation';
+%include '.\STAT6863-01_s18-team-1_data_preparation.sas';
 
 
 *******************************************************************************;
