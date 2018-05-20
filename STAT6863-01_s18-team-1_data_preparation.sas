@@ -58,33 +58,7 @@ https://github.com/stat6863/team-1_project_repo/blob/master/data/players_stats_1
 %let inputDataset2Type = CSV;
 
 *
-[Dataset 3 Name] 2016-17_officialBoxScore
-
-[Dataset Description] All NBA Team Statistics for Every Game, AY,2016-17
-
-[Experimental Unit Description] Has the combined statistics for every team and
-every game that was played in the regular season.
-
-[Number of Observations] 2,461
-
-[Number of Features] 124
-
-[Data Source] https://www.kaggle.com/pablote/nba-enhanced-stats/data
-
-[Data Dictionary] https://basketball.realgm.com/info/glossary
-
-[Unique ID Schema] The column “gmDate” and “TeamAbrv” would combine to make
-a unique ID.
-;
-%let inputDataset3DSN = teamBoxScore_16_17_raw;
-%let inputDataset3URL =
-https://github.com/stat6863/team-1_project_repo/blob/master/data/teamBoxScore_16_17.csv?raw=true
-;
-%let inputDataset3Type = CSV;
-
-
-*
-[Dataset 4 Name] PLAYER_ANTHRO
+[Dataset 3 Name] PLAYER_ANTHRO
 
 [Dataset Description] Anthropology of NBA draft players participating in the NBA
 combine.
@@ -181,17 +155,6 @@ proc sql;
 quit;
 
 proc sql;
-    create table teamboxscore_nmiss as
-	    select
-		    offFNm1
-	    from
-		    work.teamboxscore_16_17_raw
-	    where
-		    offFNm1 is missing
-	;
-quit;
-
-proc sql;
 	create table players_stats_data_1516_nmiss as
 		select
 			Player
@@ -251,26 +214,6 @@ duplicated, and therefore our ID value is also unduplicated.
 ;
 
 proc sql;
-    create table teamboxscore_dups as
-	    select
-		     teamAbbr
-		    ,gmDate
-		    ,count(*) as row_count
-	    from
-		    work.teamboxscore_16_17_raw
-	    group by
-		     teamAbbr
-		    ,gmDate
-	    having
-		    row_count > 1
-	;
-quit;
-
-* Every team only plays once a day and therefore using team and date variables
-as a unique identifier, we can get unduplicated counts for our ID.
-;
-
-proc sql;
 	create table players_stats_data_1516_dups as
 		select
 			Player
@@ -288,25 +231,8 @@ quit;
 have no duplicate ID values.
 ;
 
-* Inspecting Team Assists in our team box score data;
-	/*
-	title "Assists in teamBoxscore_16_17";
-	proc sql;
-		select
-			min(teamAST) as min
-			,max(teamAST) as max
-			,mean(teamAST) as average
-			,median(teamAST) as median
-		from
-			work.TeamBoxscore_16_17_raw
-		;
-	quit;
-	title;
-
-
 * Inspecting Height in our player Anthro Data;
-
-
+	/*
 	title "Inspect Height in player_anthro";
 	proc sql;
 		select

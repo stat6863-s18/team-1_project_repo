@@ -27,7 +27,7 @@ Note:  We would be looking at data for the 2014-15 NBA season in the
 players_stats_data dataset using the "Name" and "FG_PCT" columns along with the
 players_stats_1516_data dataset using the columns "Player" and "FG_PCT".
 
-Limitations:  .Since we are comparing data over a two year period, we can't
+Limitations:  Since we are comparing data over a two year period, we can't
 exactly conclude much as far as whether there is a trend from the small
 timeline.
 ;
@@ -51,27 +51,24 @@ quit;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Are the NBA players at the top of assists a part of the teams that
-were at the top of assists as well?
+Question: Are the NBA players at the top of assists in the 2015 season also a
+part of the top players in assists in the 2015-16 season?
 
 Rationale:  Ball movement has become more recognized and utilized in recent
 years, so it would be important to know which players produce the most assists
-over the duration of a season along with which teams generally have the most
-assists on a game by game basis.  It will also be interesting to see if the
-best assist teams have one of the leaders in that category, or if the team
-assists are a more collective team effort.
+over the duration of a season and if they can be consistent in doing it the
+following season.
 
-Note:  We will be using the players_stats_data dataset with the columns "Name",
-"AST", and "Team", and the teamBoxScore_16-17 dataset for this analysis while
-using the columns "teamAbbr" and "teamAST".  Due to the data in each dataset
-being two years apart, some players may not be on the same team in both
-datasets.
+Note:  We will be using the players_stats_data dataset with the columns "Name"
+and "AST", and the players_stats_data_raw_1516 dataset for this analysis while
+using the columns "Player" and "AST".  Due to the data in each dataset being a year
+apart, some players may not be on the same team in both datasets.
 
-Limitations:  Given how any stat from a NBA player doesn't exactly correlate
-with a team's stat, the conclusions for this experiment may not be entirely
-conclusive.  We also aren't comparing with an equal sample size for the two
-datasets we are testing on given that this would compare a player's season
-average with a team's performance in just one single game
+Limitations:  Given how the data for the players_stats_data dataset displays
+total stats for the season and the players_stats_data_raw_1516 displays stats
+per game, we don't have an exact comparison.  We would need to multiply or
+divide one of the datasets by 83, the number of games in an NBA season, in
+order to have an exact comparison.
 ;
 
 proc rank
@@ -84,16 +81,16 @@ proc rank
 run;
 proc rank
 		groups=10
-		data=teamBoxscore_16_17
-		out=teamBoxscore_16_17_ranked
+		data=players_stats_data_1516
+		out=players_stats_data_1516_ranked
 	;
-	var teamAST;
-	ranks teamAST_rank;
+	var Player;
+	ranks AST_rank;
 run;
 
 proc compare
 		base=players_stats_data
-		compare=teamBoxscore_16_17
+		compare=players_stats_data_1516
 		novalues
 	;
 run;
