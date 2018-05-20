@@ -15,7 +15,8 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Does offense win more games than defense?
+Question: Does offense rebounds more important to teams than defense rebounds 
+in 2015?
 
 Rationale: Defense has always been known to win chamionships but modern day NBA 
 focuses more on offense than defense.
@@ -25,22 +26,21 @@ offensive rebounds as offense, defensive rebounds, steals, and blocks as
 defense. team_box_score and player_stats
 
 Limitations: Dataset 1 (player_stats) is on player level data for 2014-2015
-season, whereas dataset 2 (team_box_score) is on a team level data for 2016-2017
-season. I will need to focus on the team level in order to answer my research
-question. There is no way to join between the two tables. If there was a way,
-both datasets are in two different seasons which would need to be stated in 
-order to answer my research question.
+season, whereas dataset 2 (team_box_score) is on a team level data for 
+2016-2017 season. I will need to focus on the team level in order to answer 
+my research question. There is no way to join between the two tables. 
+If there was a way, both datasets are in two different seasons which would 
+need to be stated in order to answer my research question.
 ;
 
 proc sql outobs=10;
     select
 	     player
-		,case when FG_PCT >= 40 then 'elite'
-		 else 'non-elite' end as elite_ind
-		,AVG(AST) as avg_player_AST
+		,year
+		,AVG(DREB) as avg_player_DREB
 		,AVG(REB) as avg_player_REB
 	from 
-	    player_stats_all_v2
+	    masterfile
 	group by
          1
 		,2
@@ -52,22 +52,34 @@ quit;
 
 proc rank
         groups=4
-		data=player_stats_all
-		out=player_stats_rank
+		data=masterfile
+		out=masterfile_rank1
     ;
-    var FG_PCT;
-	ranks FG_PCT_rank;
+    var REB DREB;
+	ranks REB_rank DREB_rank;
 run;
-proc means min q1 median q3 max data=player_stats_rank;
-    class FG_PCT_rank;
-	var FG_PCT;
+proc freq data=masterfile_rank1;
+	table
+		REB_rank
+		DREB_rank
+	;
+	where
+		year = '2015'
+	;
+run;
+proc means min q1 median q3 max data=masterfile_rank1;
+	class REB_rank DREB_rank;
+	var REB DREB;
+	where 
+		year = '2015'
+	;
 run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Which position is the most important for a championship caliber team?
+Question: Which position is the most important for higher points made in 2014?
 
 Rationale: NBA teams have built their teams around centers, guards, or forwards.
 But which position provided the most help in winning a championship.
@@ -87,49 +99,48 @@ proc sql outobs=10;
     select
 	     player
 		,year
+		,pos
 		,AVG(FG_PCT) as avg_player_FG
-		,AVG(AST) as avg_player_AST
-		,AVG(REB) as avg_player_REB
 	from 
-	    player_stats_all_v2
+	    masterfile
 	group by
          1
 		,2
+		,3
 	;
 quit;
 
 proc rank
         groups=4
-		data=player_stats_all
-		out=pos_stats_rank
+		data=masterfile
+		out=masterfile_rank2
     ;
-    var AST;
-	ranks AST_rank;
+    var FG_PCT;
+	ranks FG_PCT_rank;
 run;
-proc means min q1 median q3 max data=pos_stats_rank;
-    class year AST_rank;
-	var AST;
+proc freq data=masterfile_rank2;
+	table
+		FG_PCT_rank
+	;
+	where
+		year = '2014'
+	;
 run;
-
-proc rank
-        groups=4
-		data=player_stats_all
-		out=pos_stats_rank2
-    ;
-    var REB;
-	ranks REB_rank;
-run;
-proc means min q1 median q3 max data=pos_stats_rank2;
-    class year REB_rank;
-	var REB;
+proc means min q1 median q3 max data=masterfile_rank2;
+	class pos FG_PCT_rank;
+	var FG_PCT;
+	where 
+		year = '2014'
+	and
+		pos is not null
+	;
 run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Is wingspan an effective measurement of an average double digit 
-scorer?
+Question: Is wingspan an effective measurement of a higher points made in 2015? 
 
 Rationale: Sam Hinkie, previous GM of the Philadelphia 76ers, looked at 
 physical and athletic traits in order to predict a "superstar" player. One of 
@@ -145,27 +156,35 @@ only rookie players who participated in the combine for 2014-2015.
 
 proc sql outobs=10;
     select
-         player
-        ,case when AVG(pts) is null then 'null'
-         when AVG(pts) >= 10 then 'dd_pts'
-         else 'sd_pts' end as pts_volume /* Double Digit indicator */
-        ,AVG(pts) as avg_player_pts      /* Average player points */ 
+		 year
+		,player
+        ,AVG(FG_PCT) as avg_player_pts      /* Average player points */ 
 	    ,AVG(wingspan) as avg_player_ws  /* Average wingspan */
     from
-        player_stats_and_anthro_v2
+        masterfile
     ;
 quit;
 
 
 proc rank
         groups=4
-		data=player_stats_and_anthro_v2
-		out=player_stats_and_anthro_rank
+		data=masterfile
+		out=masterfile_rank3
     ;
-    var wingspan;
-	ranks ws_rank;
+    var FG_PCT wingspan;
+	ranks FG_PCT_rank ws_rank;
 run;
-proc means min q1 median q3 max data=player_stats_and_anthro_rank;
-    class ws_rank;
-	var wingspan;
+proc freq data=masterfile_rank3;
+	table
+		FG_PCT_rank
+		ws_rank
+	;
+	where
+		year = '2015'
+	;
+run;
+proc means min q1 median q3 max data=masterfile_rank3;
+	class FG_PCT_rank ws_rank;
+	var FG_PCT wingspan;
+	where year = '2015';
 run;
