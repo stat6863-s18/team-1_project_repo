@@ -165,7 +165,7 @@ proc sql;
 	;
 quit;
 
-* For all four of our datasets we can see that we have no missing ID values,
+* For all three of our datasets we can see that we have no missing ID values,
 which in our case is Name, or a combination of name and position. No rows are
 selected when we query missing values for names.
 ;
@@ -277,16 +277,16 @@ have no duplicate ID values.
 		;
 	quit;
 	title;
+	
+
+	proc sort data=work.players_stats_data_raw;
+		by Name;
+	run;
+
+	proc sort data=work.player_anthro;
+		by PLAYER;
+	run;
 	*/
-
-proc sort data=work.players_stats_data_raw;
-	by Name;
-run;
-
-proc sort data=work.player_anthro;
-	by PLAYER;
-run;
-
 
 /*
 	* combine players_stats_data and player_anthro horizontally using data-step

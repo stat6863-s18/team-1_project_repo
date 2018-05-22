@@ -32,20 +32,26 @@ exactly conclude much as far as whether there is a trend from the small
 timeline.
 ;
 
-proc means min q1 median q3 max data=player_stats_all;
-	class Name Player;
+proc means data=masterfile;
+	class Player;
+	by Year;
 	var	FG_PCT;
 run;
 
 proc sql;
 	create table FG_PCT_COMPARE as
 	(select
-		*
+		 Player
+		,Year
+		,FG_PCT
 	from
-		work.players_stats_all
+		masterfile
 	)
 	;
 quit;
+
+proc print data=FG_PCT_COMPARE;
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -73,19 +79,16 @@ order to have an exact comparison.
 
 proc rank
 		groups=10
-		data=players_stats_data
-		out=players_stats_data_ranked
+		data=masterfile
+		out=players_stats_data_ranked ties=low descending
 	;
+	by Year descending;
 	var AST;
 	ranks AST_rank;
 run;
-proc rank
-		groups=10
-		data=players_stats_data_1516
-		out=players_stats_data_1516_ranked
-	;
-	var Player;
-	ranks AST_rank;
+
+proc print data=players_stats_data_ranked;
+	by Year;
 run;
 
 proc compare
@@ -119,18 +122,18 @@ much different than one about to enter the league.
 proc sql outobs=20;
 	create table REBOUNDS_SIZE as
 		select
-			Name
+			Player
 			,REB
 			,HEIGHT_SHOES
 			,WEIGHT
 		from
-			players_stats_data_and_anthro_v2
+			masterfile
 		where
 			HEIGHT_SHOES > 100
 			and
 			WEIGHT > 200
 		order by
-			REB
+			REB desc
 		;
 quit;
 
