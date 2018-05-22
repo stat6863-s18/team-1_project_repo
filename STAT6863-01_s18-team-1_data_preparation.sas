@@ -478,6 +478,9 @@ run;
 	run;
 */
 
+*build analytic dataset from raw datasets imported above, including only the
+columns and minimal data-cleaning/transformation needed to address each
+research questions/objectives in data-analysis files;
 proc sql;
 		create table masterfile_raw as
 				select
@@ -522,6 +525,11 @@ proc sql;
 				PLAYER;
 	quit;
 
+*remove duplicates from masterfile_raw with respect to Player and year;
+*after inspecting the rows of the masterfile_raw dataset, we see that there are
+duplicates in the player and name columns between the joined datasets, but the
+variable 'year' distinguishes a difference between the duplicates.  We will
+thus use proc sort to indiscriminately remove duplicates;
 proc sort
         nodupkey
         data=masterfile_raw
