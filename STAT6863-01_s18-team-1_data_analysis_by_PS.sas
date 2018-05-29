@@ -16,30 +16,23 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 
 title1 justify=left
-"Research Question: Are offense rebounds more important to teams than defense 
-rebounds in 2015?"
+"Research Question: Are offense rebounds more important to teams than defense rebounds in 2015?"
 ;
 
 title2 justify=left
-"Rationale: Defense has always been known to win chamionships but modern day 
-NBA focuses more on offense than defense."
+"Rationale: Defense has always been known to win chamionships but modern day NBA focuses more on offense than defense."
 ;
 
 footnote1 justify=left
-"On average, in 2015, offensive rebounds are greater than defensive rebounds.
-The average offensive rebounds per game range from 0 to 14.8 in 2015 and the
-average defensive rebounds per game range from 0 to 10.3 in 2015."
+"On average, in 2015, offensive rebounds are greater than defensive rebounds. The average offensive rebounds per game range from 0 to 14.8 in 2015 and the average defensive rebounds per game range from 0 to 10.3 in 2015."
 ;
 
 footnote2 justify=left
-"We can see the greatest variability in the top 2nd quartile of offensive
-rebounds."
+"We can see the greatest variability in the top 2nd quartile of offensive rebounds."
 ;
 
 footnote3 justify=left
-"Based on the rank chart, we can see that players in the highest offensive
-rebound quartile have higher number of defensive rebounds. Thus, ranking
-offensive rebound more important than defensive rebounds."
+"Based on the rank chart, we can see that players in the highest offensive rebound quartile have higher number of defensive rebounds. Thus, ranking offensive rebound more important than defensive rebounds."
 ;
 
 *
@@ -102,28 +95,23 @@ run;
 *******************************************************************************;
 
 title1 justify=left
-"Research Question: Which position is the most important for higher points 
-made in 2014?"
+"Research Question: Which position is the most important for higher points made in 2014?"
 ;
 
 title2 justify=left
-"Rationale: NBA teams have built their teams around centers, guards, or 
-forwards. But which position provided the most help in winning a championship."
+"Rationale: NBA teams have built their teams around centers, guards, or forwards. But which position provided the most help in winning a championship."
 ;
 
 footnote1 justify=left
-"On average in 2014, positions center (C), power forward (PF), and it's
-different combinations, have the highest average points per game percentage."
+"On average in 2014, positions center (C), power forward (PF), and it's different combinations, have the highest average points per game percentage."
 ;
 
 footnote2 justify=left
-"In addition, we can see the point guard (PG) and shooting guard (SG) having
-the 3rd and 4th highest average points per game percentage."
+"In addition, we can see the point guard (PG) and shooting guard (SG) having the 3rd and 4th highest average points per game percentage."
 ;
 
 footnote3 justify=left
-"Based on comparing the means of different positions, we can see that the 
-C and PF positions are more important compare to the PG and SG positions."
+"Based on comparing the means of different positions, we can see that the C and PF positions are more important compare to the PG and SG positions."
 ;
 
 *
@@ -184,14 +172,11 @@ run;
 *******************************************************************************;
 
 title1 justify=left
-"Research Question: Is wingspan an effective measurement of higher points 
-made between 2014 and 2015?"
+"Research Question: Is wingspan an effective measurement of higher points made between 2014 and 2015?"
 ;
 
 title2 justify=left
-"Rationale: Sam Hinkie, previous GM of the Philadelphia 76ers, looked at 
-physical and athletic traits in order to predict a superstar player. One of 
-those traits was wingspan."
+"Rationale: Sam Hinkie, previous GM of the Philadelphia 76ers, looked at physical and athletic traits in order to predict a superstar player. One of those traits was wingspan."
 ;
 
 *
@@ -208,20 +193,15 @@ title3 justify=left
 ;
 
 footnote1 justify=left
-"The correlation table shows a negative correlation between FG_PCT and 
-WINGSPAN."
+"The correlation table shows a negative correlation between FG_PCT and WINGSPAN."
 ;
 
 footnote2 justify=left
-"Even though the negative correlation is low, it is still statistically
-significant with a p-value of 0.0026, and a relationship strength of 
--16.887%, on a scale of -100% to +100%."
+"Even though the negative correlation is low, it is still statistically significant with a p-value of 0.0026, and a relationship strength of -16.887%, on a scale of -100% to +100%."
 ;
 
 footnote3 justify=left
-"We can see that WINGSPAN is not an effective measurement of FG_PCT. Reasons
-explaining the negative relationship could be that players with larger WINGSPAN
-play certain positions like SF instead of C or PF."
+"We can see that WINGSPAN is not an effective measurement of FG_PCT. Reasons explaining the negative relationship could be that players with larger WINGSPAN play certain positions like SF instead of C or PF."
 ;
 
 proc corr data=masterfile;
