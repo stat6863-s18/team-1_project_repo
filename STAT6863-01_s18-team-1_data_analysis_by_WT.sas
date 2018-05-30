@@ -21,8 +21,7 @@ title1 justify=left
 'Question: Is height telling of defensive success for a player?';
 
 title2 justify=left
-'Rationale: Centers are usually "rim protectors" but lately a lot of teams have
-been implementing smaller line ups.';
+'Rationale: Centers are usually "rim protectors" but lately a lot of teams have been implementing smaller line ups.';
 
 footnote1 justify=left
 "As we can see the taller a player is in inches, the more rebounds and blocks he can get."
@@ -79,8 +78,7 @@ title1 justify=left
 'Question: Which kind of guard scores more 3 pointers, SG or PG?';
 
 title2 justify=left
-'Rationale: A point guard holds the ball more as he is the "quarterback of the
-team, but does that mean he also scores more?';
+'Rationale: A point guard holds the ball more as he is the "quarterback of the team, but does that mean he also scores more?';
 
 footnote1 justify=left
 "Between pure Point Guard (PG) and Shooting Guard (SG) positions, Point Guards score more 3 pointers on average."
@@ -121,13 +119,10 @@ run;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 title1 justify=left
-'Question: Did players attempt more 3 pointers in the 15-16 season than they did
-in the 14-15 season?';
+'Question: Did players attempt more 3 pointers in the 15-16 season than they did in the 14-15 season?';
 
 title2 justify=left
-'Rationale: There has been a trend of coaches implementing "small" line ups which
-include more 3 point shooters. The logical conclusion would then be that the
-number of 3 point attempts has also gone up year to year.';
+'Rationale: There has been a trend of coaches implementing "small" line ups which include more 3 point shooters. The logical conclusion would then be that the number of 3 point attempts has also gone up year to year.';
 
 footnote1 justify=left
 "Not only do we see the number of 3 points attempted (3PA) go up, but we also see Field Goal (FG_PCT) percentage go up."

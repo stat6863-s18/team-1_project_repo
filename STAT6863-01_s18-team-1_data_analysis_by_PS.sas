@@ -14,13 +14,28 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+"Research Question: Are offense rebounds more important to teams than defense rebounds in 2015?"
+;
+
+title2 justify=left
+"Rationale: Defense has always been known to win chamionships but modern day NBA focuses more on offense than defense."
+;
+
+footnote1 justify=left
+"On average, in 2015, offensive rebounds are greater than defensive rebounds. The average offensive rebounds per game range from 0 to 14.8 in 2015 and the average defensive rebounds per game range from 0 to 10.3 in 2015."
+;
+
+footnote2 justify=left
+"We can see the greatest variability in the top 2nd quartile of offensive rebounds."
+;
+
+footnote3 justify=left
+"Based on the rank chart, we can see that players in the highest offensive rebound quartile have higher number of defensive rebounds. Thus, ranking offensive rebound more important than defensive rebounds."
+;
+
 *
-Question: Does offense rebounds more important to teams than defense rebounds 
-in 2015?
-
-Rationale: Defense has always been known to win chamionships but modern day NBA 
-focuses more on offense than defense.
-
 Note: This question will see how wins are won by comparing points, assists 
 offensive rebounds as offense, defensive rebounds, steals, and blocks as 
 defense. team_box_score and player_stats
@@ -78,12 +93,28 @@ run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+"Research Question: Which position is the most important for higher points made in 2014?"
+;
+
+title2 justify=left
+"Rationale: NBA teams have built their teams around centers, guards, or forwards. But which position provided the most help in winning a championship."
+;
+
+footnote1 justify=left
+"On average in 2014, positions center (C), power forward (PF), and it's different combinations, have the highest average points per game percentage."
+;
+
+footnote2 justify=left
+"In addition, we can see the point guard (PG) and shooting guard (SG) having the 3rd and 4th highest average points per game percentage."
+;
+
+footnote3 justify=left
+"Based on comparing the means of different positions, we can see that the C and PF positions are more important compare to the PG and SG positions."
+;
+
 *
-Question: Which position is the most important for higher points made in 2014?
-
-Rationale: NBA teams have built their teams around centers, guards, or forwards.
-But which position provided the most help in winning a championship.
-
 Note: This question will look at shots made, total rebounds, and total
 assists and how it has contributed to championship wins. team_box_score and
 player_stats
@@ -139,13 +170,16 @@ run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1 justify=left
+"Research Question: Is wingspan an effective measurement of higher points made between 2014 and 2015?"
+;
+
+title2 justify=left
+"Rationale: Sam Hinkie, previous GM of the Philadelphia 76ers, looked at physical and athletic traits in order to predict a superstar player. One of those traits was wingspan."
+;
+
 *
-Question: Is wingspan an effective measurement of a higher points made in 2015? 
-
-Rationale: Sam Hinkie, previous GM of the Philadelphia 76ers, looked at 
-physical and athletic traits in order to predict a "superstar" player. One of 
-those traits was wingspan.
-
 Note: This question will look at average double digit scorer in the NBA and 
 compare their wingspan. player_stats and player_anthro
 
@@ -154,37 +188,45 @@ who participated in the NBA combine. Using dataset 3, I will be able to see
 only rookie players who participated in the combine for 2014-2015.
 ;
 
-proc sql outobs=10;
-    select
-		 year
-		,player
-        ,AVG(FG_PCT) as avg_player_pts      /* Average player points */ 
-	    ,AVG(wingspan) as avg_player_ws  /* Average wingspan */
-    from
-        masterfile
-    ;
-quit;
+title3 justify=left
+"Correlation analysis for FG_PCT and WINGSPAN"
+;
 
+footnote1 justify=left
+"The correlation table shows a negative correlation between FG_PCT and WINGSPAN."
+;
 
-proc rank
-        groups=4
-		data=masterfile
-		out=masterfile_rank3
+footnote2 justify=left
+"Even though the negative correlation is low, it is still statistically significant with a p-value of 0.0026, and a relationship strength of -16.887%, on a scale of -100% to +100%."
+;
+
+footnote3 justify=left
+"We can see that WINGSPAN is not an effective measurement of FG_PCT. Reasons explaining the negative relationship could be that players with larger WINGSPAN play certain positions like SF instead of C or PF."
+;
+
+proc corr data=masterfile;
+    var
+        FG_PCT
+        wingspan
     ;
-    var FG_PCT wingspan;
-	ranks FG_PCT_rank ws_rank;
+    where
+        not(missing(FG_PCT))
+        and
+        not(missing(wingspan))
+    ;
 run;
-proc freq data=masterfile_rank3;
-	table
-		FG_PCT_rank
-		ws_rank
-	;
-	where
-		year = '2015'
-	;
-run;
-proc means min q1 median q3 max data=masterfile_rank3;
-	class FG_PCT_rank ws_rank;
-	var FG_PCT wingspan;
-	where year = '2015';
+
+title1
+"Plot illustrating the negative correlation between FG_PCT and WINGSPAN"
+;
+
+footnote1
+"The scatterplot shows a slight decrease in FG_PCT as WINGSPAN increases."
+;
+
+proc sgplot data=masterfile;
+    scatter
+        x=FG_PCT
+        y=wingspan
+    ;
 run;
