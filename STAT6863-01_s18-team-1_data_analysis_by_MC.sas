@@ -17,14 +17,11 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 
 title1 justify=left
-'Question: How do the NBA players overall shooting percentage for the 2014-15
-season compare with the players with the overall shooting percentages for the
-2015-16 season?'
+'Question: How do the NBA players overall shooting percentage for the 2014-15 season compare with the players with the overall shooting percentages for the 2015-16 season?'
 ;
 
 title2 justify=left
-'Rationale:  This will help tell us if the NBA players on average shot better
-than in the previous season.'
+'Rationale:  This will help tell us if the NBA players on average shot better than in the previous season.'
 ;
 
 footnote1 justify=left
@@ -78,15 +75,11 @@ run;
 *******************************************************************************;
 
 title1 justify=left
-'Question: Who are the NBA players that averaged the most assists during the
-2014-15 and 2015-2015 season?'
+'Question: Who are the NBA players that averaged the most assists during the 2014-15 and 2015-2015 season?'
 ;
 
 title2 justify=left
-'Rationale:  Ball movement has become more recognized and utilized in recent
-years, so it would be important to know which players produce the most assists
-over the duration of a season and if they can be consistent in doing it the
-following season'
+'Rationale:  Ball movement has become more recognized and utilized in recent years, so it would be important to know which players produce the most assists over the duration of a season and if they can be consistent in doing it the following season.'
 ;
 
 footnote1 justify=left
@@ -133,15 +126,11 @@ run;
 *******************************************************************************;
 
 title1 justify=left
-'Question: How do the players that average the most rebounds compare with their
-height and weight?'
+'Question: How do the players that average the most rebounds compare with their height and weight?'
 ;
 
 title2 justify=left
-'Rationale: It will be interesting to analyze whether height or weight is a
-larger factor towards producing more rebounds.  General managers of teams could
-use this analysis when determining which furture NBA players to draft to the
-team'
+'Rationale: It will be interesting to analyze whether height or weight is a larger factor towards producing more rebounds.  General managers of teams could use this analysis when determining which future NBA players to draft to the team.'
 ;
 
 footnote1 justify=left
