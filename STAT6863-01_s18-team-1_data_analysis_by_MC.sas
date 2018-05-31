@@ -1,4 +1,3 @@
-
 *******************************************************************************;
 **************** 80-character banner for column width reference ***************;
 * (set window width to banner width to calibrate line length to 80 characters *;
@@ -177,6 +176,8 @@ proc sql outobs=20;
 quit;
 
 proc means data=REBOUNDS_SIZE;
-	var HEIGHT_SHOES WEIGHT
+	var
+		HEIGHT_SHOES
+		WEIGHT
 	;
 run;
