@@ -44,23 +44,18 @@ timeline
 ;
 
 proc sql outobs=10;
-	create table FG_PCT_COMPARE as
-		select
-			 Player
-			,Year
-			,FGA
-			,FG_PCT
-		from
-			masterfile
-		where
-			FGA > 10
-		order by
-			FG_PCT desc
-		;
-run;
-
-proc print data=FG_PCT_COMPARE;
-	title 'Top shooting performances in NBA';
+	select
+		 Player
+		,Year
+		,FGA
+		,FG_PCT
+	from
+		masterfile
+	where
+		FGA > 10
+	order by
+		FG_PCT desc
+	;
 run;
 
 proc sgplot data=FG_PCT_COMPARE;
@@ -104,21 +99,16 @@ order to have an exact comparison
 ;
 
 proc sql outobs=10;
-	create table AST_COMPARE as
-		select
-			 Player
-			,avg(AST) as AvgAST
-		from
-			masterfile
-		group by
-			Player
-		order by
-			AvgAST desc
-		;
-run;
-
-proc print data=AST_COMPARE;
-	title 'Comparison of top Assist performers over two seasons';
+	select
+		 Player
+		,avg(AST) as AvgAST
+	from
+		masterfile
+	group by
+		Player
+	order by
+		AvgAST desc
+	;
 run;
 
 *******************************************************************************;
@@ -169,30 +159,24 @@ proc corr data=masterfile;
 run;
 
 proc sql outobs=20;
-	create table REBOUNDS_SIZE as
-		select
-			Player
-			,Year
-			,REB
-			,HEIGHT_SHOES
-			,WEIGHT
-		from
-			masterfile
-		where
-			HEIGHT_SHOES > 0
-			and
-			WEIGHT > 0
-		order by
-			REB desc
-		;
+	select
+		Player
+		,Year
+		,REB
+		,HEIGHT_SHOES
+		,WEIGHT
+	from
+		masterfile
+	where
+		HEIGHT_SHOES > 0
+		and
+		WEIGHT > 0
+	order by
+		REB desc
+	;
 quit;
 
-proc print data=REBOUNDS_SIZE;
-	title 'Rebound leaders with their height and weight';
-run;
-
 proc means data=REBOUNDS_SIZE;
-	var HEIGHT_SHOES
-		WEIGHT
+	var HEIGHT_SHOES WEIGHT
 	;
 run;
