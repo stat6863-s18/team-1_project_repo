@@ -15,6 +15,10 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 title1 justify=left
 "Research Question: Are offense rebounds more important to teams than defense rebounds in 2015?"
 ;
@@ -46,25 +50,27 @@ season, whereas dataset 2 (team_box_score) is on a team level data for
 my research question. There is no way to join between the two tables. 
 If there was a way, both datasets are in two different seasons which would 
 need to be stated in order to answer my research question.
+
+Methodology: Use proc report to show the first ten observations of the 
+data. Then create quartiles using proc rank and see the frequency using
+proc freq. Finally use proc means to see the averages in offensive and
+defensive rebounds.
+
+Followup Steps: Clean missing data values for find additional data to 
+fill missing values. Possibly add more years to the data.
 ;
 
-proc sql outobs=10;
-    select
-	     player
-		,year
-		,AVG(DREB) as avg_player_DREB
-		,AVG(REB) as avg_player_REB
-	from 
-	    masterfile
-	group by
-         1
-		,2
-	having MIN >= 2000
-	order by 
-        MIN desc
+* output first ten rows of data to examine research question;
+proc report data=masterfile (obs=10);
+	columns
+		player
+		year
+		DREB
+		REB
 	;
-quit;
+run;
 
+* create quartiles for offensive and defensive rebounds in 2015;
 proc rank
         groups=4
 		data=masterfile
@@ -73,6 +79,8 @@ proc rank
     var REB DREB;
 	ranks REB_rank DREB_rank;
 run;
+
+* examine rebound quartiles;
 proc freq data=masterfile_rank1;
 	table
 		REB_rank
@@ -82,6 +90,8 @@ proc freq data=masterfile_rank1;
 		year = '2015'
 	;
 run;
+
+* examine rebound descriptive statistics;
 proc means min q1 median q3 max data=masterfile_rank1;
 	class REB_rank DREB_rank;
 	var REB DREB;
@@ -93,6 +103,10 @@ run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+* clear titles/footnotes;
+title;
+footnote;
 
 title1 justify=left
 "Research Question: Which position is the most important for higher points made in 2014?"
@@ -123,9 +137,17 @@ Limitations: Since dataset 1 and dataset 2 cannot be joined without additional
 information (i.e. team each player was on during the 2014-2015 season). Another
 limitation to note is the different seasons each dataset refers to, 2014-2015 
 and 2015-2016, respectively.
+
+Methodology: Use proc sql to check the first ten observations in the data.
+Create quartiles using proc rank and proc freq to see the frequency of FG 
+percentage. Then use proc means to use as a benchmark when comparing the FG
+percentage by position.
+
+Followup Steps: Clean the position data to show only one position instead of
+combinations.
 ;
 
-
+* output first ten rows addressing research question;
 proc sql outobs=10;
     select
 	     player
@@ -141,6 +163,7 @@ proc sql outobs=10;
 	;
 quit;
 
+* create quartiles for FG percentage;
 proc rank
         groups=4
 		data=masterfile
@@ -149,6 +172,8 @@ proc rank
     var FG_PCT;
 	ranks FG_PCT_rank;
 run;
+
+* examine frequency for FG percentage quartiles in 2014;
 proc freq data=masterfile_rank2;
 	table
 		FG_PCT_rank
@@ -157,6 +182,8 @@ proc freq data=masterfile_rank2;
 		year = '2014'
 	;
 run;
+
+* examine FG percentage descriptive statistics;
 proc means min q1 median q3 max data=masterfile_rank2;
 	class pos FG_PCT_rank;
 	var FG_PCT;
@@ -170,6 +197,10 @@ run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+* clear titles/footnotes;
+title;
+footnote;
 
 title1 justify=left
 "Research Question: Is wingspan an effective measurement of higher points made between 2014 and 2015?"
@@ -186,6 +217,13 @@ compare their wingspan. player_stats and player_anthro
 Limitations: Dataset 3 (player_anthro) only contains data on rookie NBA players
 who participated in the NBA combine. Using dataset 3, I will be able to see
 only rookie players who participated in the combine for 2014-2015.
+
+Methodology: Use proc corr to examine the correlation between FG percentage
+and wingspan. Then create a scatterplot to get a visual relationship between
+the two variables.
+
+Followup Steps: Carefully clean missing values in order to ensure valid 
+results. Possibly add more years to the data to get a stronger result.
 ;
 
 title3 justify=left
@@ -204,6 +242,7 @@ footnote3 justify=left
 "We can see that WINGSPAN is not an effective measurement of FG_PCT. Reasons explaining the negative relationship could be that players with larger WINGSPAN play certain positions like SF instead of C or PF."
 ;
 
+* examine the correlation between FG percentage and wingspan;
 proc corr data=masterfile;
     var
         FG_PCT
@@ -216,6 +255,10 @@ proc corr data=masterfile;
     ;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 title1
 "Plot illustrating the negative correlation between FG_PCT and WINGSPAN"
 ;
@@ -224,9 +267,14 @@ footnote1
 "The scatterplot shows a slight decrease in FG_PCT as WINGSPAN increases."
 ;
 
+* create scatterplot with FG percentage vs wingspan;
 proc sgplot data=masterfile;
     scatter
         x=FG_PCT
         y=wingspan
     ;
 run;
+
+* clear titles/footnotes;
+title;
+footnote;
