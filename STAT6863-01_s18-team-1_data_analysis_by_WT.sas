@@ -78,6 +78,10 @@ proc corr data=work.masterfile;
     ;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -148,6 +152,11 @@ run;
 proc sgplot data=work.masterfile;
   vbar POS/ response=_3PM stat=mean;
 run;
+
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -207,3 +216,7 @@ quit;
 *The results show that there are in fact more attempts in the 15-16 season
 than there are in the 14-15 season, confirming our theory that 3 pointers
 attempted are indeed increasing. 
+
+* clear titles/footnotes;
+title;
+footnote;
