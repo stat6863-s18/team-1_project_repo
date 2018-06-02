@@ -7,10 +7,9 @@
 
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
-
 * load external file that will generate final analytic file;
 
-%include '.\STAT6863-01_s18-team-1_project_data_preparation.sas';
+%include '.\STAT6863-01_s18-team-1_data_preparation.sas';
 
 
 *******************************************************************************;
