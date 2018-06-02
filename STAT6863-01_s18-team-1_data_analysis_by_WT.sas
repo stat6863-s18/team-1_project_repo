@@ -7,10 +7,9 @@
 
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
-
 * load external file that will generate final analytic file;
 
-%include '.\STAT6863-01_s18-team-1_project_data_preparation';
+%include '.\STAT6863-01_s18-team-1_data_preparation.sas';
 
 
 *******************************************************************************;
@@ -21,10 +20,10 @@ title1 justify=left
 'Question: Is height telling of defensive success for a player?';
 
 title2 justify=left
-'Rationale: Centers are usually "rim protectors" but lately a lot of teams have been implementing smaller line ups.';
+'Rationale: Taller players are usually "rim protectors" but lately a lot of teams have been implementing smaller line ups.';
 
 footnote1 justify=left
-"As we can see the taller a player is in inches, the more rebounds and blocks he can get."
+"As we can see from the correlation matrix the taller a player is, in inches, the more rebounds and blocks he can get."
 ;
 footnote2 justify=left
 "Steals on the other hand can range for all different heights."
@@ -44,16 +43,23 @@ must use additional ID variables such as position, and be careful that a player
 is not being incorrectly attributed certain statistics.
 ;
 
+*
+Methodology: Using Proc SQL we can query data we need from a masterfile we have
+created on NBA stats. After we have the necessary data, we use proc correlation
+to see if we can find a meaningful relationship between two of our "defensive" 
+stats Blocks(BLK) and Defesnive Rebounds(DREB);
+ 
 proc sql;
 	select distinct
-	         HEIGHT_SHOES
-                ,avg(DREB) as AvgDREB
-                ,avg(STL) as AvgSTL
-                ,avg(BLK) as AvgBLK
+	         Floor(HEIGHT_SHOES,10) as Height_With_Shoes_On
+                ,avg(DREB) as Average_Defensive_Rebounds
+                ,avg(STL) as Average_Steals
+                ,avg(BLK) as Average_Blocks
         from
                 masterfile
-        group by Round(HEIGHT_SHOES,10)
-        order by Round(HEIGHT_SHOES,10)
+        where HEIGHT_SHOES >72
+        group by Floor(HEIGHT_SHOES,10)
+        order by Floor(HEIGHT_SHOES,10)
         ;
 quit;
 
@@ -61,11 +67,14 @@ proc corr data=work.masterfile;
     var
         BLK
         DREB
+        HEIGHT_SHOES
     ;
     where
         not(missing(BLK))
         and
         not(missing(DREB))
+        and
+        HEIGHT_SHOES > 72
     ;
 run;
 
@@ -97,24 +106,48 @@ in a column and Last Name is in a seperate column. We must figure out whether
 Middle names might affect our ID variable. It seems like player_stats only uses
 first and last name, but team_box_score uses multiple.
 ;
-proc sql;
-	select
-		POS
-		,avg(_3PM) as _3PM
-  	from 
-  		masterfile
-  	where 
-  		POS='SG' OR POS='PG'
-  	group by 
-  		POS
-  	order by
-  		_3PM;
-quit;
+
+*
+Methodology: Using Proc Sort we can create a new file from our NBA stats
+masterfile where we only include our Position (PG and SG) and 3 points made 
+variable. From there, using Proc Report we can take the average number of 3
+points made by position and compare our values. We can then see which
+player positions are scoring most by looking at the data visually with bar
+charts, where the x axis is position and the y-axis is average 3 points made.
+;
+
+*
+Followup Steps: Because great players can often play multiple positions, they
+blurry the lines and are often given multiple labels such as PG-SG or listed 
+twice under each label. In order to get a true sense of what position is making
+the most 3 point shots, then we would clearly have to define each players
+position.
+;
+proc sort
+        data=masterfile
+        out=masterfile_sorted
+    ;
+    by
+        descending POS
+        _3PM
+    ;
+    where
+        POS = "SG"
+        or
+        POS = "PG"
+    ;
+run;
+
+proc report data=masterfile_sorted (keep=POS _3PM);
+    columns POS _3PM;
+    DEFINE POS/group 'Position';
+    DEFINE _3PM/mean format=5.2 'Average 3 Points Made' width=8;
+    ;
+run;
 
 proc sgplot data=work.masterfile;
   vbar POS/ response=_3PM stat=mean;
 run;
-
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -143,11 +176,17 @@ Limitations: We only have 2 data points. In order to make a broader conclusion,
 more years of data would have to be added in to make a conclusion with more
 certainty.
 ;
+
+*
+Methodology: Using Proc SQL we can query data from our NBA masterfile to create 
+a report and see what the difference in attempts and field goal percantage is 
+between 2014 and 2015. 
+;
 proc sql;
   	(select 
   		year
-  		,avg(_3PA) as _3PA
-  		,avg(FG_PCT) as FG_PCT
+  		,avg(_3PA) as _3_Points_Attempted
+  		,avg(FG_PCT) as Field_Goal_Percentage
   	from 
   		masterfile
   	where 
@@ -155,8 +194,8 @@ proc sql;
 	union
   	(select
   		year
-  		,avg(_3PA) as _3PA
-  		,avg(FG_PCT) as FG_PCT
+  		,avg(_3PA) as _3_Points_Attempted
+  		,avg(FG_PCT) as Field_Goal_Percentage
   	from 
   		masterfile
   	where 

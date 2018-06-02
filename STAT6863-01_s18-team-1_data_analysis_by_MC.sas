@@ -22,14 +22,6 @@ title1 justify=left
 title2 justify=left
 'Rationale:  This will help tell us if the NBA players on average shot better than in the previous season.'
 ;
-
-footnote1 justify=left
-"We can see from the table that 5 of the six highest shooting players from the two seasons are from the 2014-15 season, followed by 4 shooting performances from the 2015-16 season.  It shows that the top performers in this category declined between the two seasons."
-;
-
-footnote2 justify=left
-"The plot shows that Dwight Howard, and to a lesser extent Marcin Gortat, by far has the best shooting percentage from the two seasons based on players who averaged more than 10 shots per game.  The following 8 players in the top ten list are closely bunched together."
-;
  
 *
 Note:  We would be looking at data for the 2014-15 NBA season in the
@@ -39,30 +31,77 @@ and "FGA".
 
 Limitations:  Since we are comparing data over a two year period, we can not
 exactly conclude much as far as whether there is a trend from the small
-timeline
+timeline.
+
+Methodology:  We will use proc sort to order the data by FG_PCT in descending
+order, provided that the players selected shot more than 10 field goals per
+game.  We then use proc report to display a table of the top ten leaders in the
+field goal percentage category while indicating which columns we wish output.
+Finally, we use proc sgplot to display these ten leaders and how their
+respective field goal percentage for the indicated season compares with the
+other leaders.
+
+Followup Steps:  We could follow up this experiment by expanding our data to
+include the player's position to see if there is a corrlation between a
+player's field goal percentage compared to their natural position.
 ;
 
-proc sql outobs=10;
-	select
-		 Player
-		,Year
-		,FGA
-		,FG_PCT
-	from
-		masterfile
+title3 justify=left
+'Table displaying the top ten NBA players with the highest shooting performance during the 2014-15 and 2015-16 NBA season'
+;
+
+footnote1 justify=left
+"We can see from the table that five of the six highest shooting players from the two seasons are from the 2014-15 season, followed by four shooting performances from the 2015-16 season.  It shows that the top performers in this category declined between the two seasons."
+;
+
+footnote2 justify=left
+"It is interesting to note that nine of the ten leaders, with the exception being Lebron James, have a natural position of power forward or center." 
+;
+
+proc sort
+		data=masterfile
+		out=FG_PCT_COMPARE
+	;
+	by
+		descending FG_PCT
+	;
 	where
 		FGA > 10
-	order by
-		FG_PCT desc
 	;
 run;
 
-proc sgplot data=FG_PCT_COMPARE;
+proc report data=FG_PCT_COMPARE(obs=10);
+	columns
+		Player
+		Year
+		FGA
+		FG_PCT
+	;
+run;
+
+*clear titles/footnotes;
+title;
+footnote;
+
+
+title1 justify=left
+'Plot illustrating the NBA players with the beast Field Goal Percentage during the 2014-15 and 2015-16 season'
+;
+
+footnote1 justify=left
+"The plot shows that Dwight Howard, and to a lesser extent Marcin Gortat, by far has the best shooting percentage from the two seasons based on players who averaged more than 10 shots per game.  The following 8 players in the top ten list are closely bunched together."
+;
+
+proc sgplot data=FG_PCT_COMPARE(obs=10);
 	scatter
 		x=Player
 		y=FG_PCT
 	;
 run;
+
+*clear titles/footnotes;
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -76,25 +115,38 @@ title2 justify=left
 'Rationale:  Ball movement has become more recognized and utilized in recent years, so it would be important to know which players produce the most assists over the duration of a season and if they can be consistent in doing it the following season.'
 ;
 
-footnote1 justify=left
-"We can see that Chris Paul, John Wall, and Rajon Rondo averaged the most assists during the two specified NBA seasons."
-;
-
-footnote2 justify=left
-"It's important to note that 8 of the players in the top ten in assists, with Lebron James and James Harden being the exceptions, are point guards, which is the position that traditionally creates the offense."
-;
-
 *
 Note:  We will be using the players_stats_data dataset with the columns "Name"
 and "AST", and the players_stats_data_raw_1516 dataset for this analysis while
-using the columns "Player" and "AST".  Due to the data in each dataset being a year
-apart, some players may not be on the same team in both datasets
+using the columns "Player" and "AST".  Due to the data in each dataset being a
+year apart, some players may not be on the same team in both datasets
 
 Limitations:  Given how the data for the players_stats_data dataset displays
 total stats for the season and the players_stats_data_raw_1516 displays stats
 per game, we do not have an exact comparison.  We would need to multiply or
 divide one of the datasets by 83, the number of games in an NBA season, in
 order to have an exact comparison
+
+Methoology:  We use proc sql to create a table while computing the average
+number of assists per game over the two seasons for each player.  The table is
+sorted in descending order by this category as we display the top ten leaders
+for average assists.
+
+Followup steps:  We can include more columns to further advance any analysis
+that we wish to experiment on that can relate to player's assists, such as
+Team, Position, and Points.
+;
+
+title3 justify=left
+'Table showing the top leaders in average assists over the 2014-15 and 2015-16 NBA seasons.'
+;
+
+footnote1 justify=left
+"We can see that Chris Paul, John Wall, and Rajon Rondo averaged the most assists during the two specified NBA seasons."
+;
+
+footnote2 justify=left
+"It's important to note that eight of the players in the top ten in assists, with Lebron James and James Harden being the exceptions, are point guards, which is the position that traditionally creates the offense."
 ;
 
 proc sql outobs=10;
@@ -110,6 +162,10 @@ proc sql outobs=10;
 	;
 run;
 
+*clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -122,18 +178,6 @@ title2 justify=left
 'Rationale: It will be interesting to analyze whether height or weight is a larger factor towards producing more rebounds.  General managers of teams could use this analysis when determining which future NBA players to draft to the team.'
 ;
 
-footnote1 justify=left
-"We can see that the average height in shoes of the selected NBA players is 152 centimeters while the average weight is 214 pounds."
-;
-
-footnote2 justify=left
-"Looking at the top rebounders over the 2014-15 and 2015-2016 season, we notice that the leaders, Andre Drummond, has a height in shoes at 213 and a weight of 278.6."
-;
-
-footnote3 justify=left
-"Computing the means of the rebounding leaders, we see that the height in shoes and weight column averages, 185.1 and 247.1 respecitively, are each higher than the overall average by about the same difference.  Thus, height in shoes and weight each appear to carry the same magnitude of importance in rebounding."
-;
-
 *
 Note:  We will be using the columns "Name" and "REB" from the
 players_stats_data dataset along with the columns "HEIGHT_SHOES" and "WEIGHT" in
@@ -143,6 +187,25 @@ Limitations:  Since the player list for the player_anthro data is only showing
 heights and weights for players from the NBA combine, the comparision may not
 have complete accuracy given the typical height and weight of an NBA player is
 much different than one about to enter the league
+
+Methodology:  Use proc corr to give us the overall average in HEIGHT_SHOES and
+WEIGHT for all NBA players in our dataset, with no missing data included.
+Then, use proc sort to order the dataset by Rebounds in descending order while
+indicating HEIGHT_SHOES and WEIGHT are greater than zero.  We then use proc
+report to create a table while indicating the columns we want to be displayed.
+Finally, we use proc means to compute the two averages in HEIGHT_SHOES and
+WEIGHT among the top twenty rebounders according to the table.
+
+Followup Steps:  Cleaning out any unecessary information under the proc corr
+table in order to make the analysis easier to comprehend and conclude.
+;
+
+title3 justify=left
+'Table which includes overall mean for NBA player HEIGHT_SHOES and WEIGHT'
+;
+
+footnote1 justify=left
+"We can see that the average height in shoes of the selected NBA players is 152 centimeters while the average weight is 214 pounds."
 ;
 
 proc corr data=masterfile;
@@ -157,27 +220,62 @@ proc corr data=masterfile;
 	;
 run;
 
-proc sql outobs=20;
-	select
-		Player
-		,Year
-		,REB
-		,HEIGHT_SHOES
-		,WEIGHT
-	from
-		masterfile
+*clear titles/footnotes;
+title;
+footnote;
+
+title1 justify=left
+'Table of the top rebounders in the NBA during the 2014-15 and 2015-16 season along with their Height in Shoes and Weight'
+;
+
+footnote1 justify=left
+"Looking at the top rebounders over the 2014-15 and 2015-2016 season, we notice that the leader, Andre Drummond, has a height in shoes at 213 and a weight of 278.6."
+;
+
+proc sort
+		data=masterfile
+		out=REBOUNDS_SIZE
+	;
+	by
+		descending REB
+	;
 	where
 		HEIGHT_SHOES > 0
 		and
 		WEIGHT > 0
-	order by
-		REB desc
 	;
-quit;
+run;
 
-proc means data=REBOUNDS_SIZE;
+proc report data=REBOUNDS_SIZE(obs=20);
+	columns
+		Player
+		Year
+		REB
+		HEIGHT_SHOES
+		WEIGHT
+	;
+run;
+
+*clear titles/footnotes;
+title;
+footnote;
+
+
+title1 justify=left
+'Average Height in Shoes and Weight of top NBA rebounders in dataset'
+;
+
+footnote1 justify=left
+"Computing the means of the rebounding leaders, we see that the height in shoes and weight column averages, 185.1 and 247.165 respecitively, are each higher than the overall average by about the same difference.  Thus, height in shoes and weight each appear to carry the same magnitude of importance in rebounding."
+;
+
+proc means data=REBOUNDS_SIZE(obs=20);
 	var
 		HEIGHT_SHOES
 		WEIGHT
 	;
 run;
+
+*clear titles/footnotes;
+title;
+footnote;
