@@ -22,17 +22,6 @@ title1 justify=left
 title2 justify=left
 'Rationale: Taller players are usually "rim protectors" but lately a lot of teams have been implementing smaller line ups.';
 
-footnote1 justify=left
-"As we can see from the correlation matrix the taller a player is, in inches, the more rebounds and blocks he can get."
-;
-footnote2 justify=left
-"Steals on the other hand can range for all different heights."
-;
-
-footnote3 justify=left
-"Because taller players can get more rebounds and blocks, we can check if there is a correlation between those 2 variables. With an R of .69 we can say that there is a strong correlation between Blocks and Defensive Rebounds."
-;
-
 *
 Note: This compares the column "Height w/ Shoes" from Player Anthro Data
 to the columns "DREB", "STL", and "Blocks" from player_stats.
@@ -63,6 +52,21 @@ proc sql;
         ;
 quit;
 
+* clear titles/footnotes;
+title;
+footnote;
+
+footnote1 justify=left
+"As we can see from the correlation matrix the taller a player is, in inches, the more rebounds and blocks he can get."
+;
+footnote2 justify=left
+"Steals on the other hand can range for all different heights."
+;
+
+footnote3 justify=left
+"Because taller players can get more rebounds and blocks, we can check if there is a correlation between those 2 variables. With an R of .69 we can say that there is a strong correlation between Blocks and Defensive Rebounds."
+;
+
 proc corr data=work.masterfile;
     var
         BLK
@@ -78,24 +82,18 @@ proc corr data=work.masterfile;
     ;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
-
-
 title1 justify=left
-'Question: Which kind of guard scores more 3 pointers, SG or PG?';
+"Question: Which kind of guard scores more 3 pointers, SG or PG?";
 
 title2 justify=left
-'Rationale: A point guard holds the ball more as he is the "quarterback of the team, but does that mean he also scores more?';
-
-footnote1 justify=left
-"Between pure Point Guard (PG) and Shooting Guard (SG) positions, Point Guards score more 3 pointers on average."
-;
-
-footnote2 justify=left
-"When you get hybrid players that play multiple positions, this conclusion changes. There are players who can play multiple positions and score plenty of 3 pointers."
-;
+"Rationale: A point guard holds the ball more as he is the quarterback of the team, but does that mean he also scores more?";
 
 *
 Note: This compares the column "3PM" and "POS" from masterfile.
@@ -145,9 +143,24 @@ proc report data=masterfile_sorted (keep=POS _3PM);
     ;
 run;
 
+title;
+footnote;
+
+footnote1 justify=left
+"Between pure Point Guard (PG) and Shooting Guard (SG) positions, Point Guards score more 3 pointers on average."
+;
+
+footnote2 justify=left
+"When you get hybrid players that play multiple positions, this conclusion changes. There are players who can play multiple positions and score plenty of 3 pointers."
+;
 proc sgplot data=work.masterfile;
   vbar POS/ response=_3PM stat=mean;
 run;
+
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -207,3 +220,7 @@ quit;
 *The results show that there are in fact more attempts in the 15-16 season
 than there are in the 14-15 season, confirming our theory that 3 pointers
 attempted are indeed increasing. 
+
+* clear titles/footnotes;
+title;
+footnote;
