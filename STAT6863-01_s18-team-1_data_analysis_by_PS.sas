@@ -8,16 +8,12 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-01_s18-team-1_project_data_preparation';
+%include '.\STAT6863-01_s18-team-1_data_preparation.sas';
 
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
-
-* clear titles/footnotes;
-title;
-footnote;
 
 title1 justify=left
 "Research Question: Are offense rebounds more important to teams than defense rebounds in 2015?"
@@ -29,14 +25,6 @@ title2 justify=left
 
 footnote1 justify=left
 "On average, in 2015, offensive rebounds are greater than defensive rebounds. The average offensive rebounds per game range from 0 to 14.8 in 2015 and the average defensive rebounds per game range from 0 to 10.3 in 2015."
-;
-
-footnote2 justify=left
-"We can see the greatest variability in the top 2nd quartile of offensive rebounds."
-;
-
-footnote3 justify=left
-"Based on the rank chart, we can see that players in the highest offensive rebound quartile have higher number of defensive rebounds. Thus, ranking offensive rebound more important than defensive rebounds."
 ;
 
 *
@@ -70,6 +58,14 @@ proc report data=masterfile (obs=10);
 	;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
+footnote2 justify=left
+"We can see the greatest variability in the top 2nd quartile of offensive rebounds."
+;
+
 * create quartiles for offensive and defensive rebounds in 2015;
 proc rank
         groups=4
@@ -91,6 +87,14 @@ proc freq data=masterfile_rank1;
 	;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
+footnote3 justify=left
+"Based on the rank chart, we can see that players in the highest offensive rebound quartile have higher number of defensive rebounds. Thus, ranking offensive rebound more important than defensive rebounds."
+;
+
 * examine rebound descriptive statistics;
 proc means min q1 median q3 max data=masterfile_rank1;
 	class REB_rank DREB_rank;
@@ -100,13 +104,13 @@ proc means min q1 median q3 max data=masterfile_rank1;
 	;
 run;
 
-*******************************************************************************;
-* Research Question Analysis Starting Point;
-*******************************************************************************;
-
 * clear titles/footnotes;
 title;
 footnote;
+
+*******************************************************************************;
+* Research Question Analysis Starting Point;
+*******************************************************************************;
 
 title1 justify=left
 "Research Question: Which position is the most important for higher points made in 2014?"
@@ -118,14 +122,6 @@ title2 justify=left
 
 footnote1 justify=left
 "On average in 2014, positions center (C), power forward (PF), and it's different combinations, have the highest average points per game percentage."
-;
-
-footnote2 justify=left
-"In addition, we can see the point guard (PG) and shooting guard (SG) having the 3rd and 4th highest average points per game percentage."
-;
-
-footnote3 justify=left
-"Based on comparing the means of different positions, we can see that the C and PF positions are more important compare to the PG and SG positions."
 ;
 
 *
@@ -163,6 +159,14 @@ proc sql outobs=10;
 	;
 quit;
 
+* clear titles/footnotes;
+title;
+footnote;
+
+footnote2 justify=left
+"In addition, we can see the point guard (PG) and shooting guard (SG) having the 3rd and 4th highest average points per game percentage."
+;
+
 * create quartiles for FG percentage;
 proc rank
         groups=4
@@ -183,6 +187,14 @@ proc freq data=masterfile_rank2;
 	;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
+footnote3 justify=left
+"Based on comparing the means of different positions, we can see that the C and PF positions are more important compare to the PG and SG positions."
+;
+
 * examine FG percentage descriptive statistics;
 proc means min q1 median q3 max data=masterfile_rank2;
 	class pos FG_PCT_rank;
@@ -194,13 +206,13 @@ proc means min q1 median q3 max data=masterfile_rank2;
 	;
 run;
 
-*******************************************************************************;
-* Research Question Analysis Starting Point;
-*******************************************************************************;
-
 * clear titles/footnotes;
 title;
 footnote;
+
+*******************************************************************************;
+* Research Question Analysis Starting Point;
+*******************************************************************************;
 
 title1 justify=left
 "Research Question: Is wingspan an effective measurement of higher points made between 2014 and 2015?"
