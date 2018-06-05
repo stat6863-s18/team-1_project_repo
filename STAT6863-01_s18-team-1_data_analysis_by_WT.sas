@@ -37,6 +37,14 @@ Methodology: Using Proc SQL we can query data we need from a masterfile we have
 created on NBA stats. After we have the necessary data, we use proc correlation
 to see if we can find a meaningful relationship between two of our "defensive" 
 stats Blocks(BLK) and Defesnive Rebounds(DREB);
+
+*
+Followup Steps: Due to the increasing change in smaller line ups, players that 
+often get the most rebounds are also the ones who score the most points as well
+as play the most minutes. This means that height might not be directly linear 
+to how many rebounds a player gets per game, especially for teams who often
+play with "shooting" lineups.
+;
  
 proc sql;
 	select distinct
@@ -136,6 +144,7 @@ proc sort
     ;
 run;
 
+
 proc report data=masterfile_sorted (keep=POS _3PM);
     columns POS _3PM;
     DEFINE POS/group 'Position';
@@ -195,6 +204,15 @@ Methodology: Using Proc SQL we can query data from our NBA masterfile to create
 a report and see what the difference in attempts and field goal percantage is 
 between 2014 and 2015. 
 ;
+
+*
+Followup Steps: In order to make this a more accurate and complete conclusion,
+we would have to collect more data points for this upcoming year. This would
+tell us if indeed the trend is going up or if what we are witnessing is just
+simple deviation.
+
+;
+
 proc sql;
   	(select 
   		year
