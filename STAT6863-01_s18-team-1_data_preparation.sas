@@ -134,7 +134,16 @@ options fullstimer;
 proc sql;
 		create table masterfile_raw as
 				select
-					*
+						ps.*
+						,pa.BODY_FAT
+						,pa.HAND_LENGTH
+						,pa.HAND_WIDTH
+						,pa.HEIGHT
+						,pa.HEIGHT_SHOES
+						,pa.POS
+						,pa.STAND_REACH
+						,pa.WEIGHT
+						,pa.WINGSPAN
 				from
 					(( select
 						 "2014" as year
@@ -170,12 +179,9 @@ proc sql;
 			left join
 				work.player_anthro as pa
 			on
-				pa.PLAYER = ps.Player
-			order by
-				PLAYER;
+				ps.Player = pa.PLAYER;
 	quit;
 
-*remove duplicates from masterfile_raw with respect to Player and year;
 *after inspecting the rows of the masterfile_raw dataset, we see that there are
 duplicates in the player and name columns between the joined datasets, but the
 variable 'year' distinguishes a difference between the duplicates.  We will
