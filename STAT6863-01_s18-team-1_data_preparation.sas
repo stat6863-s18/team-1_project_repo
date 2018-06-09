@@ -235,7 +235,27 @@ thus use proc sort to indiscriminately remove duplicates;
 proc sql;
 	create table masterfile_raw as
 		select
-			*
+				 ps.year
+				,ps.Player
+				,FG_PCT
+				,FGA
+				,_3PM
+				,_3PA
+				,MIN
+				,AST
+				,REB
+				,DREB
+				,STL
+				,BLK
+				,pa.pos
+				,pa.body_fat
+				,pa.hand_length
+				,pa.hand_width
+				,pa.height
+				,pa.height_shoes
+				,pa.stand_reach
+				,pa.wingspan
+				,pa.weight
 		from
 		  (( select
 				"2014" as year
