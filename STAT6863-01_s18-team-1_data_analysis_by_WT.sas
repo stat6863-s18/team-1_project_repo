@@ -48,15 +48,15 @@ play with "shooting" lineups.
  
 proc sql;
 	select distinct
-	         Floor(HEIGHT_SHOES,10) as Height_With_Shoes_On
+	         ROUND(HEIGHT_SHOES,10) as Height_With_Shoes_On
                 ,avg(DREB) as Average_Defensive_Rebounds
                 ,avg(STL) as Average_Steals
                 ,avg(BLK) as Average_Blocks
         from
                 masterfile
         where HEIGHT_SHOES >72
-        group by Floor(HEIGHT_SHOES,10)
-        order by Floor(HEIGHT_SHOES,10)
+        group by Height_With_Shoes_On
+        order by Height_With_Shoes_On
         ;
 quit;
 
@@ -65,7 +65,7 @@ title;
 footnote;
 
 footnote1 justify=left
-"As we can see from the correlation matrix the taller a player is, in inches, the more rebounds and blocks he can get."
+"As we can see from the correlation matrix the height of a player, in inches, is correlated with the number of rebounds and blocks he can get."
 ;
 footnote2 justify=left
 "Steals on the other hand can range for all different heights."
