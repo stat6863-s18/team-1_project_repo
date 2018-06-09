@@ -235,7 +235,18 @@ thus use proc sort to indiscriminately remove duplicates;
 proc sql;
 	create table masterfile_raw as
 		select
-			*
+				 ps.year
+				,ps.Player
+				,FG_PCT
+				,FGA
+				,_3PM
+				,_3PA
+				,MIN
+				,AST
+				,REB
+				,DREB
+				,STL
+				,BLK
 		from
 		  (( select
 				"2014" as year
@@ -274,6 +285,7 @@ proc sql;
 				work.player_anthro as pa
 			on
 				pa.PLAYER = ps.Player
+				and put(pa.year, year4.) = ps.year
 		order by
 			PLAYER;
 quit;
