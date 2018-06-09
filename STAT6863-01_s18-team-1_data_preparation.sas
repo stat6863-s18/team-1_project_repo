@@ -294,7 +294,6 @@ proc sql;
 				work.player_anthro as pa
 			on
 				pa.PLAYER = ps.Player
-				and put(pa.year, year4.) = ps.year
 		order by
 			PLAYER;
 quit;
