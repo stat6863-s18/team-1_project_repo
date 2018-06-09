@@ -247,6 +247,15 @@ proc sql;
 				,DREB
 				,STL
 				,BLK
+				,pa.pos
+				,pa.body_fat
+				,pa.hand_length
+				,pa.hand_width
+				,pa.height
+				,pa.height_shoes
+				,pa.stand_reach
+				,pa.wingspan
+				,pa.weight
 		from
 		  (( select
 				"2014" as year
