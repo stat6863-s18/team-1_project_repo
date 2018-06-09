@@ -54,7 +54,11 @@ footnote1 justify=left
 "We can see from the table that five of the six highest shooting players from the two seasons are from the 2014-15 season, followed by four shooting performances from the 2015-16 season.  It shows that the top performers in this category declined between the two seasons."
 ;
 
-footnote2 justify=left
+footnote3 justify=left
+"A possible reason for the decline in shooting percentage among leaders is that games are being played faster, which leads to more shotdss, and therefore a higher chance of rushed shots being missed."
+;
+
+footnote3 justify=left
 "It is interesting to note that nine of the ten leaders, with the exception being Lebron James, have a natural position of power forward or center." 
 ;
 
@@ -70,10 +74,14 @@ proc sort
 	;
 run;
 
+proc print data=FG_PCT_COMPARE(obs=10);
+run;
+
 proc report data=FG_PCT_COMPARE(obs=10);
 	columns
 		Player
 		Year
+		POS
 		FGA
 		FG_PCT
 	;
@@ -93,10 +101,8 @@ footnote1 justify=left
 ;
 
 proc sgplot data=FG_PCT_COMPARE(obs=10);
-	scatter
-		x=Player
-		y=FG_PCT
-	;
+	vbar Player / response=FG_PCT;
+	yaxis ranges=(50-60);
 run;
 
 *clear titles/footnotes;
@@ -146,13 +152,17 @@ footnote1 justify=left
 ;
 
 footnote2 justify=left
+"We can see that the three mentioned individuals have significantly higher assist averages than the rest of the league.  We can also see that all three averaged approximately 10 assists per game, which is considered a remarkable feat."
+;
+
+footnote3 justify=left
 "It's important to note that eight of the players in the top ten in assists, with Lebron James and James Harden being the exceptions, are point guards, which is the position that traditionally creates the offense."
 ;
 
 proc sql outobs=10;
 	select
 		 Player
-		,avg(AST) as AvgAST
+		,avg(AST)as AvgAST (label="Average Assits")
 	from
 		masterfile
 	group by
@@ -171,7 +181,7 @@ footnote;
 *******************************************************************************;
 
 title1 justify=left
-'Question: How do the players that average the most rebounds compare with their height and weight?'
+'Question: What is a larger factor for NBA players grabbing the most rebounds:  Height or Weight?'
 ;
 
 title2 justify=left
@@ -208,6 +218,10 @@ footnote1 justify=left
 "We can see that the average height in shoes of the selected NBA players is 152 centimeters while the average weight is 214 pounds."
 ;
 
+footnote2 justify=left
+"We can see in the correlation table that the p-values for both Height in Shoes and Weight are each about .617, meaning there is litle difference between the two categories in terms of rebounding."
+;
+
 proc corr data=masterfile;
 	var
 		HEIGHT_SHOES
@@ -225,57 +239,22 @@ title;
 footnote;
 
 title1 justify=left
-'Table of the top rebounders in the NBA during the 2014-15 and 2015-16 season along with their Height in Shoes and Weight'
+'Table of the regresiion model and several plots corresponding to it'
 ;
 
 footnote1 justify=left
-"Looking at the top rebounders over the 2014-15 and 2015-2016 season, we notice that the leader, Andre Drummond, has a height in shoes at 213 and a weight of 278.6."
+"Looking at the model, we can see that the p-value for the model is very small, indicating that there is a corrleation."
 ;
 
-proc sort
-		data=masterfile
-		out=REBOUNDS_SIZE
-	;
-	by
-		descending REB
-	;
-	where
-		HEIGHT_SHOES > 0
-		and
-		WEIGHT > 0
-	;
-run;
+footnote2 justify=left
+"Looking at the plots, we can see a strong linear relationship and that the variables HEIGHT_SHOES and WEIGHT, specifically in the residual plots, are similarly related to the Rebounds variable."
+;
 
-proc report data=REBOUNDS_SIZE(obs=20);
-	columns
-		Player
-		Year
-		REB
-		HEIGHT_SHOES
-		WEIGHT
-	;
+proc reg data=masterfile;
+	model REB = HEIGHT_SHOES WEIGHT;
 run;
 
 *clear titles/footnotes;
 title;
 footnote;
 
-
-title1 justify=left
-'Average Height in Shoes and Weight of top NBA rebounders in dataset'
-;
-
-footnote1 justify=left
-"Computing the means of the rebounding leaders, we see that the height in shoes and weight column averages, 185.1 and 247.165 respecitively, are each higher than the overall average by about the same difference.  Thus, height in shoes and weight each appear to carry the same magnitude of importance in rebounding."
-;
-
-proc means data=REBOUNDS_SIZE(obs=20);
-	var
-		HEIGHT_SHOES
-		WEIGHT
-	;
-run;
-
-*clear titles/footnotes;
-title;
-footnote;
