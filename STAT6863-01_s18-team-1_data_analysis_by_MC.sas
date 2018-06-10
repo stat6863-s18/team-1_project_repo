@@ -54,12 +54,8 @@ footnote1 justify=left
 "We can see from the table that five of the six highest shooting players from the two seasons are from the 2014-15 season, followed by four shooting performances from the 2015-16 season.  It shows that the top performers in this category declined between the two seasons."
 ;
 
-footnote3 justify=left
-"A possible reason for the decline in shooting percentage among leaders is that games are being played faster, which leads to more shotdss, and therefore a higher chance of rushed shots being missed."
-;
-
-footnote3 justify=left
-"It is interesting to note that nine of the ten leaders, with the exception being Lebron James, have a natural position of power forward or center." 
+footnote2 justify=left
+"A possible reason for the decline in shooting percentage among leaders is that games are being played faster, which leads to more shots, and therefore a higher chance of rushed shots being missed."
 ;
 
 proc sort
@@ -74,17 +70,14 @@ proc sort
 	;
 run;
 
-proc print data=FG_PCT_COMPARE(obs=10);
-run;
-
 proc report data=FG_PCT_COMPARE(obs=10);
 	columns
 		Player
 		Year
-		POS
-		FGA
 		FG_PCT
 	;
+	define Year / 'Year';
+	define FG_PCT / 'Field Goal Percentage';
 run;
 
 *clear titles/footnotes;
@@ -155,20 +148,16 @@ footnote2 justify=left
 "We can see that the three mentioned individuals have significantly higher assist averages than the rest of the league.  We can also see that all three averaged approximately 10 assists per game, which is considered a remarkable feat."
 ;
 
-footnote3 justify=left
-"It's important to note that eight of the players in the top ten in assists, with Lebron James and James Harden being the exceptions, are point guards, which is the position that traditionally creates the offense."
-;
-
 proc sql outobs=10;
 	select
 		 Player
-		,avg(AST)as AvgAST (label="Average Assits")
+		,avg(AST) as Average_Assists
 	from
 		masterfile
 	group by
 		Player
 	order by
-		AvgAST desc
+		Average_Assists desc
 	;
 run;
 
@@ -239,7 +228,7 @@ title;
 footnote;
 
 title1 justify=left
-'Table of the regresiion model and several plots corresponding to it'
+'Table of the regression model and several plots corresponding to it'
 ;
 
 footnote1 justify=left
